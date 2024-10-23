@@ -17,7 +17,6 @@ const useAxiosProtect = () => {
         const requestInterceptor = axiosProtect.interceptors.request.use(
             (config) => {
                 const token = localStorage.getItem('jwtToken');
-                console.log('Token being sent in request:', token); 
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;  // Add token to headers
                 }

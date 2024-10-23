@@ -1,38 +1,72 @@
 import React, { useContext, useEffect, useState } from 'react';
 import useAxiosSecure from '../Components/hooks/useAxiosSecure';
 import { ContextData } from '../Provider';
-import moment from 'moment';
+import { toast } from 'react-toastify';
 
 const Summary = () => {
     const axiosSecure = useAxiosSecure();
     const { reFetch } = useContext(ContextData);
 
-// ----------------------------Sales summary start---------------------------------------------------------
-    const [sales, setSales] = useState([]);
+    // ----------------------------Sales summary start---------------------------------------------------------
+    const [summaryData, setSummaryData] = useState({
+        saleSummary: {},
+        purchaseSummary: {},
+        expenseSummary: {},
+    });
+
     useEffect(() => {
-        axiosSecure.get("/getFullSales")
-        .then((data) => setSales(data.data));
+        axiosSecure.get("/getSummary")
+            .then((response) => {
+                setSummaryData(response.data);
+            })
+            .catch((error) => {
+                toast.error("Error fetching summary data:", error);
+            });
     }, [reFetch, axiosSecure]);
 
-    const todaysDate = moment(new Date()).format("DD.MM.YYYY");
+    const { saleSummary, purchaseSummary, expenseSummary } = summaryData;
 
-    // Filter sales for today's date
-    const todaysSales = sales.filter(sale => sale.date === todaysDate);
 
-    // Calculate totals
-    const totalSales = todaysSales.reduce((acc, sale) => acc + sale.grandTotal, 0);
-    const totalDue = todaysSales.reduce((acc, sale) => acc + sale.dueAmount, 0);
-    const totalCashSales = todaysSales.reduce((acc, sale) => acc + sale.finalPayAmount, 0);
-
-    console.log("Today's Total Sales:", totalSales);
-    console.log("Today's Total Due:", totalDue);
-    console.log("Today's Total Cash Sales:", totalCashSales);
-
-// ----------------------------Sales summary end---------------------------------------------------------
+    // ----------------------------Sales summary end---------------------------------------------------------
 
     return (
         <div className="px-2">
-            This is summary
+            <h2 className='text-4xl font-bold text-center my-5 pb-5 uppercase'>Today's summary</h2>
+
+            <div className='w-full mx-auto flex gap-5'>
+                <div className='w-1/2 space-y-5'>
+                    <div className='border-2 border-green-600 p-5 rounded-lg shadow-md'>
+                        <h2 className='text-3xl font-bold underline'>Sales Summary:</h2>
+                        <div className='my-2 font-bold mt-5'>
+                            <p className='text-2xl mb-2 text-green-600'>Total Sales: {saleSummary.totalSales}</p>
+                            <p className='text-xl text-orange-500'>Sales on Cash: {saleSummary.totalCashSales}</p>
+                            <p className='text-xl text-red-600 mt-2'>Total Due on Sales: {saleSummary.totalDue}</p>
+
+                            <p className='text-xl mt-5 text-green-500'>Due Collections on Sales: {saleSummary.totalCollectedDueFromSales}</p>
+                        </div>
+                    </div>
+
+                    <div className='border-2 border-yellow-600 p-5 rounded-lg shadow-md'>
+                        <h2 className='text-3xl font-bold underline'>Purchase Summary:</h2>
+                        <div className='my-2 font-bold mt-5'>
+                            <p className='text-2xl mb-2 text-green-600'>Total Purchase: {purchaseSummary.totalPurchase}</p>
+                            <p className='text-xl text-orange-500'>Purchase on Cash: {purchaseSummary.totalCashPurchase}</p>
+                            <p className='text-xl text-red-600 mt-2'>Total Due on Purchase: {purchaseSummary.totalPurchaseDue}</p>
+
+                            <p className='text-xl mt-5 text-green-500'>Due Given on Purchase: {purchaseSummary.totalCollectedDueFromPurchases}</p>
+                        </div>
+                    </div>
+
+                    <div className='border-2 border-red-600 p-5 rounded-lg shadow-md'>
+                        <h2 className='text-3xl font-bold underline'>Total Expense: {expenseSummary.todaysCost}</h2>
+
+                    </div>
+                </div>
+                <div className='w-1/2 border border-gray-400 rounded-md p-2'></div>
+            </div>
+
+
+
         </div>
     );
 };

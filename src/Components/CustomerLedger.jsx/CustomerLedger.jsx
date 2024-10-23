@@ -200,7 +200,7 @@ const CustomerLedger = () => {
                     <td>{customer.contactNumber}</td>
                     <td>
                       {customer.dueAmount > 0
-                        ? customer.dueAmount
+                        ? <span>BDT: {(customer.dueAmount.toFixed(2))}</span>
                         : null}
                     </td>
                     <td className="text-center">

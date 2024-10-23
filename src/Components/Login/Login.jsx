@@ -33,7 +33,6 @@ const Login = () => {
   
     try {
       const result = await loginWithEmail(email, password);
-      console.log(result);
       const user = result.user;
       const emailData = { email: user.email };
   

@@ -156,6 +156,7 @@ const SupplierLedger = () => {
                 <th>Address</th>
                 <th>Contact person</th>
                 <th>Contact No.</th>
+                <th>Due AMount</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -169,6 +170,11 @@ const SupplierLedger = () => {
                     <td>{supplier.supplierAddress}</td>
                     <td>{supplier.contactPerson}</td>
                     <td>{supplier.contactNumber}</td>
+                    <td>
+                    {supplier.dueAmount > 0
+                        ? <span>BDT: {(supplier.dueAmount.toFixed(2))}</span>
+                        : null}
+                    </td>
                     <td>
                       {" "}
                       <IoEyeOutline
