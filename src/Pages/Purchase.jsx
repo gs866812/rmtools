@@ -11,7 +11,7 @@ import useAxiosProtect from "../Components/hooks/useAxiosProtect";
 const Purchase = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const {reFetch, productCount, setItemsPerPage, user} = useContext(ContextData);
+  const {reFetch, setItemsPerPage, user} = useContext(ContextData);
   const [invoice, setInvoice] = useState([]);
   const [count, setCount] = useState({});
   const [itemsPerPage, setItemsPerPages] = useState(20);
@@ -128,7 +128,6 @@ const Purchase = () => {
       <div className="flex gap-5 justify-between">
         <Link
           to="/newPurchase"
-          onClick={()=> setItemsPerPage(productCount)}
           className="border py-2 px-10 font-semibold shadow rounded-md w-auto flex items-center gap-2 text-xl bg-green-600 text-white cursor-pointer"
         >
           <span>+ New Purchase</span>

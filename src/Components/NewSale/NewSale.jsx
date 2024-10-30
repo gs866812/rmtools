@@ -11,16 +11,14 @@ import Select from "react-select";
 const NewSale = () => {
   const {
     user,
-    allProducts,
-    customer,
     setReFetch,
     reFetch,
     userName,
     setItemsPerPage,
-    customerCount,
   } = useContext(ContextData);
   const axiosSecure = useAxiosSecure();
 
+  const [allProducts, setAllProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
@@ -41,6 +39,18 @@ const NewSale = () => {
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false);
   const [contactNumberValue, setContactNumberValue] = useState("");
   const [newCustomer, setNewCustomer] = useState({});
+
+  useEffect(() => {
+    axiosSecure
+      .get("/newSaleProducts")
+      .then((data) => {
+        setAllProducts(data.data.products); // Now you get all products
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, [reFetch]);
+
 
   const handleInputSalesQuantity = (event) => {
     const salesQuantityValue = event.target.value;
@@ -216,7 +226,6 @@ const NewSale = () => {
   };
 
   const handleNext = () => {
-    setItemsPerPage(customerCount);
     document.getElementById("sales_step_1").classList.add("hidden");
     document.getElementById("add_product").classList.add("hidden");
     document.getElementById("sales_step_2").classList.remove("hidden");
@@ -227,10 +236,10 @@ const NewSale = () => {
     document.getElementById("sales_step_2").classList.add("hidden");
   };
 
-  const customerOptions = customer.map((customer) => ({
-    value: customer.contactNumber,
-    label: customer.customerName,
-  }));
+  // const customerOptions = customer.map((customer) => ({
+  //   value: customer.contactNumber,
+  //   label: customer.customerName,
+  // }));
 
   // const handleCustomerChange = (selectedOption) => {
   //   const selectedCustomer = customer.find(

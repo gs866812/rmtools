@@ -43,7 +43,9 @@ const Provider = ({ children }) => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       try {
-        const response = await axios.post("http://localhost:9000/validate-token", { token });  
+        const response = await axios.post("http://localhost:9000/validate-token", null, {
+          headers: { Authorization: `Bearer ${token}` }
+      });  
         if (response.data.success) {
           setUser(response.data.user); // Set user if token is valid
           setTokenReady(true);
@@ -81,6 +83,20 @@ const Provider = ({ children }) => {
       setLoading(false); // Always stop loading, whether successful or not
     }
   };
+
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+        if (event.key === "jwtToken" && event.newValue !== localStorage.getItem("jwtToken")) {
+            logOut();  // Logout if token has been changed in storage
+        }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+        window.removeEventListener("storage", handleStorageChange);
+    };
+}, []);
 
   // Data fetching useEffects
   useEffect(() => {
@@ -284,12 +300,15 @@ const Provider = ({ children }) => {
     setCount,
     setSearchCustomer,
     setSearchSupplier,
+    tokenReady,
   };
 
   // Optionally handle loading or token validation
-  if (!tokenReady && loading) {
-    return <div>Loading...</div>; // Show loading while validating the token
-  }
+  // if (!tokenReady && loading) {
+  //   return <div className="flex justify-center items-center lg:p-20 mt-5 lg:mt-0">
+  //   <span className="loading loading-dots loading-lg"></span>
+  // </div> // Show loading while validating the token
+  // }
 
   return <ContextData.Provider value={info}>{children}</ContextData.Provider>;
 };

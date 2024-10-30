@@ -10,7 +10,7 @@ import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { loginWithEmail, setUser } = useContext(ContextData);
+  const { loginWithEmail, setUser, tokenReady, user} = useContext(ContextData);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -18,10 +18,11 @@ const Login = () => {
 
 
   useEffect(() => {
-    if (localStorage.getItem('jwtToken')) {
-      navigate(from, { replace: true }); // Redirect if already logged in
+    if (tokenReady && user) {
+        navigate(from, { replace: true });
     }
-  }, [navigate, from]);
+}, [tokenReady, user, navigate, from]);
+
 
 
 

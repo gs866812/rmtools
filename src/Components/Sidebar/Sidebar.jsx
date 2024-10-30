@@ -152,43 +152,31 @@ const Sidebar = () => {
           </NavLink>
         </div>
         <div>
-          <a
-            href="/customer"
-            className={`p-2 w-full flex items-center gap-2 mb-[1px] 
-              ${isCustomer
-                ? "bg-[#151515] text-white"
-                : "hover:bg-[#151515] hover:text-white"
-              }`}
+          <NavLink
+            to="/customer"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
           >
             <FcBusinessman className="text-xl" /> Customer
-          </a>
+          </NavLink>
         </div>
 
         <div>
-          <a
-            href="/product"
-            className={`p-2 w-full flex items-center gap-2 mb-[1px] 
-              ${isProduct
-                ? "bg-[#151515] text-white"
-                : "hover:bg-[#151515] hover:text-white"
-              }`}
+          <NavLink
+            to="/product"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
           >
             <FcPaid className="text-xl" /> Product
-          </a>
+          </NavLink>
         </div>
 
         <div>
-          <a
-            href="/supplier"
-            className={`p-2 w-full flex items-center gap-2 mb-[1px] 
-              ${isSupplier
-                ? "bg-[#151515] text-white"
-                : "hover:bg-[#151515] hover:text-white"
-              }`}
+          <NavLink
+            to="/supplier"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
           >
             <FcInTransit className="text-xl" />
             Supplier{" "}
-          </a>
+          </NavLink>
         </div>
 
         <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0">

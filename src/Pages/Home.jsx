@@ -19,7 +19,7 @@ import useAxiosProtect from "../Components/hooks/useAxiosProtect";
 const Home = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const {mainBalance, stock, logOut, reFetch, setMainBalance, currentPage, itemsPerPage, searchStock, user, setCount, setStock} = useContext(ContextData);
+  const { mainBalance, stock, logOut, reFetch, setMainBalance, currentPage, itemsPerPage, searchStock, user, setCount, setStock } = useContext(ContextData);
 
 
   const [supplierDue, setSupplierDue] = useState([]);
@@ -28,49 +28,50 @@ const Home = () => {
 
   const mBalance = mainBalance[0]?.mainBalance;
   const parseBalance = parseFloat(mBalance || 0);
-  const currentBalance = parseFloat(parseBalance).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  const currentBalance = parseFloat(parseBalance.toFixed(2)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 
   // const totalStock = stock.reduce((acc, stock) => acc + stock.purchaseQuantity, 0);
   // const totalStock = Array.isArray(stock)
   //   ? stock.reduce((acc, item) => acc + item.purchaseQuantity, 0)
   //   : 0;
 
-    useEffect(()=> {
-      axiosProtect.get('/supplierTotalDueBalance', {
-        params: {
-		      userEmail: user?.email,
-        },
-      })
+  useEffect(() => {
+    axiosProtect.get('/supplierTotalDueBalance', {
+      params: {
+        userEmail: user?.email,
+      },
+    })
       .then(res => {
         setSupplierDue(res.data);
       }).catch(err => {
         toast.error(err);
       });
-    },[reFetch]);
+  }, [reFetch]);
 
-    useEffect(()=> {
-      axiosProtect.get('/customerTotalDueBalance', {
-        params: {
-		userEmail: user?.email,
-        },
-      })
+  useEffect(() => {
+    axiosProtect.get('/customerTotalDueBalance', {
+      params: {
+        userEmail: user?.email,
+      },
+    })
       .then(res => {
         setCustomerDue(res.data);
       }).catch(err => {
         toast.error(err);
       });
-    },[reFetch]);
+  }, [reFetch]);
 
-    // ............... get main balance
+  // ............... get main balance
   useEffect(() => {
     axiosProtect.get("/mainBalance", {
       params: {
         userEmail: user?.email,
       },
     })
-    .then((res) => {
-      setMainBalance(res.data);
-    });
+      .then((res) => {
+        setMainBalance(res.data);
+      });
   }, [reFetch]);
 
   // ......................
@@ -106,7 +107,7 @@ const Home = () => {
         </div>
         <div className="w-full bg">
           <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-green-600 text-white">
-          <h2 className="text-xl font-bold">{parseFloat(totalStock || 0).toFixed(2)}</h2>
+            <h2 className="text-xl font-bold">{parseFloat(totalStock || 0).toFixed(2)}</h2>
             <p>CURRENT STOCK</p>
           </div>
         </div>
@@ -186,7 +187,7 @@ const Home = () => {
           <img src={balance} alt="Balance" className="w-[60%]" />
           <p className="text-center">Balance</p>
         </Link>
-        <div onClick={()=> logOut()} className="flex flex-col items-center py-3 px-7 rounded-lg shadow border gap-5 cursor-pointer">
+        <div onClick={() => logOut()} className="flex flex-col items-center py-3 px-7 rounded-lg shadow border gap-5 cursor-pointer">
           <img src={logout} alt="Purchase Report" className="w-[60%]" />
           <p className="text-center">Logout</p>
         </div>

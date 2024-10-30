@@ -11,7 +11,7 @@ const Sales = () => {
     const axiosSecure = useAxiosSecure();
     const axiosProtect = useAxiosProtect();
 
-    const {reFetch, productCount, setItemsPerPage, user} = useContext(ContextData);
+    const {reFetch,  user} = useContext(ContextData);
     const [invoice, setInvoice] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [count, setCount] = useState({});
@@ -129,7 +129,6 @@ const Sales = () => {
       <div className="flex gap-5 justify-between">
         <Link
           to="/newSales"
-          onClick={()=> setItemsPerPage(productCount)}
           className="border py-2 px-10 font-semibold shadow rounded-md w-auto flex items-center gap-2 text-xl bg-green-600 text-white cursor-pointer"
         >
           <span>+ New Sales</span>

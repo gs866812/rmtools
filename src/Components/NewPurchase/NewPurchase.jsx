@@ -12,15 +12,14 @@ import Select from "react-select"; // Import react-select
 const NewPurchase = () => {
   const {
     user,
-    allProducts,
-    supplier,
     setReFetch,
     reFetch,
     mainBalance,
     userName,
     setItemsPerPage,
-    supplierCount,
   } = useContext(ContextData);
+
+  const [allProducts, setAllProducts] = useState([]);
   const axiosSecure = useAxiosSecure();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [purchaseQuantity, setPurchaseQuantity] = useState("");
@@ -38,6 +37,18 @@ const NewPurchase = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [contactNumberValue, setContactNumberValue] = useState("");
   const [newSupplier, setNewSupplier] = useState({});
+
+  useEffect(() => {
+    axiosSecure
+      .get("/newPurchaseProducts")
+      .then((data) => {
+        setAllProducts(data.data.products); // Now you get all products
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+      });
+  }, [reFetch]);
+
 
   const handleInputPurchaseQuantity = (event) => {
     const purchaseQuantityValue = event.target.value;
@@ -225,7 +236,6 @@ const NewPurchase = () => {
   };
 
   const handleNext = () => {
-    setItemsPerPage(supplierCount);
     document.getElementById("purchase_step_1").classList.add("hidden");
     document.getElementById("add_product").classList.add("hidden");
     document.getElementById("purchase_step_2").classList.remove("hidden");
