@@ -15,12 +15,13 @@ const NewSale = () => {
     reFetch,
     userName,
     setItemsPerPage,
+    customerCount,
   } = useContext(ContextData);
   const axiosSecure = useAxiosSecure();
 
   const [allProducts, setAllProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
 
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
@@ -34,7 +35,6 @@ const NewSale = () => {
   const [grandTotal, setGrandTotal] = useState("");
   const [payAmount, setPayAmount] = useState("");
   const [dueAmount, setDueAmount] = useState("");
-  const [customerSerial, setCustomerSerial] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false);
   const [contactNumberValue, setContactNumberValue] = useState("");
@@ -180,8 +180,8 @@ const NewSale = () => {
 
   const salesProductListAmount = Array.isArray(tempProductList)
     ? tempProductList.map(
-        (product) => product.salesQuantity * product.salesPrice
-      )
+      (product) => product.salesQuantity * product.salesPrice
+    )
     : [];
 
   let salesAmount = 0;
@@ -191,8 +191,8 @@ const NewSale = () => {
 
   const salesProfitProductListAmount = Array.isArray(tempProductList)
     ? tempProductList.map(
-        (product) => product.salesQuantity * product.purchasePrice
-      )
+      (product) => product.salesQuantity * product.purchasePrice
+    )
     : [];
 
   let salesProfitAmount = 0;
@@ -454,9 +454,8 @@ const NewSale = () => {
               className="border p-2 rounded-md outline-none"
             />
             <button
-              className={`bg-green-500 text-white py-2 px-3 rounded-md cursor-pointer ${
-                available ? "opacity-50 cursor-default" : ""
-              }`}
+              className={`bg-green-500 text-white py-2 px-3 rounded-md cursor-pointer ${available ? "opacity-50 cursor-default" : ""
+                }`}
               disabled={available || isAddButtonDisabled}
             >
               Add
@@ -658,9 +657,8 @@ const NewSale = () => {
                 Previous
               </p>
               <button
-                className={`py-1 px-5 rounded-md bg-green-500 text-white ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`py-1 px-5 rounded-md bg-green-500 text-white ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
               >
                 Proceed

@@ -3,7 +3,7 @@ import useAxiosSecure from '../Components/hooks/useAxiosSecure';
 import { ContextData } from '../Provider';
 import { toast } from 'react-toastify';
 import moment from 'moment/moment';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
 
 const Summary = () => {

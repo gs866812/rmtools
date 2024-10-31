@@ -13,6 +13,8 @@ const CustomerLedger = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
   const { reFetch, setReFetch, user } = useContext(ContextData);
+
+  const [allCustomer, setAllCustomer] = useState([]);
   const [customer, setCustomer] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [count, setCount] = useState({});
@@ -62,7 +64,32 @@ const CustomerLedger = () => {
   }, [reFetch]);
 
   // Make excel
+  // Get all customer for excel
+  useEffect(() => {
+    axiosProtect
+      .get(`/allCustomer`)
+      .then((data) => {
+        setAllCustomer(data.data);
+      })
+      .catch((err) => {
+        toast.error("Server error", err);
+      });
+  }, [reFetch]);
   const downloadExcel = () => {
+    // Format the data to include only the desired columns
+    const formattedData = allCustomer.map((customer) => ({
+      "Customer Name": customer.customerName,
+      "Contact No": customer.contactNumber,
+      "Address ": customer.customerAddress,
+      "Due amount ": customer.dueAmount,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Due List");
+    XLSX.writeFile(workbook, "customerDueList.xlsx");
+  };
+  const downloadExcelCurrent = () => {
     // Format the data to include only the desired columns
     const formattedData = customer.map((customer) => ({
       "Customer Name": customer.customerName,
@@ -156,8 +183,15 @@ const CustomerLedger = () => {
             src={excel}
             alt="Excel"
             className="w-[20px] h-[20%] cursor-pointer ml-5"
-            title="Download excel"
+            title="Download full list"
             onClick={downloadExcel}
+          />
+          <img
+            src={excel}
+            alt="Excel"
+            className="w-[20px] h-[20%] cursor-pointer ml-5"
+            title="Download current list"
+            onClick={downloadExcelCurrent}
           />
         </div>
         <label className="flex gap-1 items-center border py-1 px-3 rounded-md">

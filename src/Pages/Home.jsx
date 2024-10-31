@@ -15,6 +15,7 @@ import { ContextData } from "../Provider";
 import useAxiosSecure from "../Components/hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import useAxiosProtect from "../Components/hooks/useAxiosProtect";
+import Summary from "./Summary";
 
 const Home = () => {
   const axiosSecure = useAxiosSecure();
@@ -124,6 +125,10 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* --------------------------------------------------------- */}
+      <Summary/>
+      {/* --------------------------------------------------------- */}
 
       {/* dashboard cards */}
       <div className="grid grid-cols-5 gap-5 mt-12">
