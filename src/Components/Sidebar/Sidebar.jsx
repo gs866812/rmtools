@@ -7,6 +7,7 @@ import {
   FcBusinessman,
   FcCurrencyExchange,
   FcDocument,
+  FcElectricity,
   FcInTransit,
   FcLeft,
   FcList,
@@ -300,6 +301,16 @@ const Sidebar = () => {
 
         <div>
           <NavLink
+            to="/expenseList"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+          >
+            <FcElectricity className="text-xl" />
+            Expense List{" "}
+          </NavLink>
+        </div>
+
+        <div>
+          <NavLink
             to="/return"
             className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
           >
@@ -307,6 +318,7 @@ const Sidebar = () => {
             Return{" "}
           </NavLink>
         </div>
+
         {/* User */}
         <div>
           <div className="w-10">

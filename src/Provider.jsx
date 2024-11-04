@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import auth from "./firebase.config";
 import axios from "axios";
+import useAxiosProtect from "./Components/hooks/useAxiosProtect";
+
 
 export const ContextData = createContext(null);
 
@@ -37,6 +39,8 @@ const Provider = ({ children }) => {
   const [searchStock, setSearchStock] = useState("");
   const [searchCustomer, setSearchCustomer] = useState("");
   const [tokenReady, setTokenReady] = useState(false); // Keep for future use if needed
+
+  const axiosProtect = useAxiosProtect();
 
   // Token validation logic
   const validateToken = async () => {
@@ -100,22 +104,27 @@ const Provider = ({ children }) => {
 
   // Data fetching useEffects
   useEffect(() => {
-    axiosSecure
-      .get("/customers", {
-        params: {
-          page: currentPage,
-          size: itemsPerPage,
-          search: searchCustomer,
-        },
-      })
-      .then((data) => {
-        setCustomer(data.data.result);
-        setCustomerCount(data.data.count);
-      })
-      .catch((err) => {
-        toast("Error fetching data", err);
-      });
-  }, [reFetch, currentPage, itemsPerPage, searchCustomer, axiosSecure]);
+    // Add a check to avoid unnecessary API calls if data already exists
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get("/customers", {
+          params: {
+            userEmail: user.email, // Ensure email is sent with the request
+            page: currentPage,
+            size: itemsPerPage,
+            search: searchCustomer,
+          },
+        })
+        .then((data) => {
+          setCustomer(data.data.result);
+          setCustomerCount(data.data.count);
+        })
+        .catch((err) => {
+          toast("Error fetching data", err);
+        });
+    }
+  }, [reFetch, currentPage, itemsPerPage, searchCustomer, axiosProtect, tokenReady, user?.email]);
+  
 
   useEffect(() => {
     axiosSecure.get("/categories").then((data) => setCategories(data.data));
@@ -195,7 +204,8 @@ const Provider = ({ children }) => {
   }, [reFetch]);
 
   useEffect(() => {
-    axiosSecure
+    if (tokenReady && user?.email) {
+      axiosProtect
       .get("/suppliers", {
         params: {
           userEmail: user?.email,
@@ -211,7 +221,9 @@ const Provider = ({ children }) => {
       .catch((err) => {
         toast("Error fetching data", err);
       });
-  }, [reFetch, currentPage, itemsPerPage, searchSupplier, axiosSecure]);
+    }
+    
+  }, [reFetch, currentPage, itemsPerPage, searchSupplier, axiosSecure, tokenReady, user?.email]);
 
   useEffect(() => {
     axiosSecure

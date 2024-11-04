@@ -161,14 +161,16 @@ const Purchase = () => {
       {/* load data */}
       <div>
         <div className="overflow-x-auto pb-5">
-          <table className="table table-zebra">
+          <table className="table">
             {/* head */}
             <thead>
               <tr className="border bg-green-200 text-black">
                 <th className="w-[10%]">Date</th>
                 <th className="w-[12%]">Billing No</th>
                 <th>Supplier name</th>
-                <th className="w-[10%]">Amount</th>
+                <th className="w-[10%]">Invoice Amount</th>
+                <th className="w-[10%]">Paid Amount</th>
+                <th className="w-[10%]">Due Amount</th>
                 <th className="w-[10%]">User</th>
                 <th className="">Action</th>
               </tr>
@@ -177,11 +179,17 @@ const Purchase = () => {
               {/* row 1 */}
               {Array.isArray(invoice) && 
                 invoice.map(invoice => 
-                  <tr key={invoice._id}>
+                  <tr key={invoice._id} className={`
+                    ${invoice.userName == 'ARIF2020'? 'bg-cyan-100':
+                    invoice.userName == 'ASAD1010'? 'bg-slate-300':''}
+                    ${invoice.dueAmount > 0 ? 'text-red-500': ''}
+                    `}>
                   <td>{invoice.date}</td>
                   <td>{invoice.invoiceNumber}</td>
                   <td>{invoice.supplierName}</td>
                   <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
+                  <td>{parseFloat(invoice.finalPayAmount).toFixed(2)}</td>
+                  <td>{parseFloat(invoice.dueAmount).toFixed(2)}</td>
                   <td>{invoice.userName}</td>
                   <td className="text-center w-[8%]"> <IoEyeOutline onClick={()=> viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer"/></td>
 

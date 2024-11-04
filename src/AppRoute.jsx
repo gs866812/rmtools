@@ -25,6 +25,7 @@ import NotFound from "./Pages/NotFound";
 import QuotationInvoice from "./Components/PdfMaker/QuotationInvoice";
 import TradeReturn from "./Components/Return/TradeReturn";
 import Summary from "./Pages/Summary";
+import ExpenseList from "./Components/ExpenseList/ExpenseList";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -59,6 +60,7 @@ export const router = createBrowserRouter([
       { path: "/customerLedger/id/:_id", element: <SingleCustomerLedger /> },
       { path: "/return", element: <TradeReturn /> },
       { path: "/summary", element: <Summary /> },
+      { path: "/expenseList", element: <ExpenseList /> },
     ],
   },
 ]);

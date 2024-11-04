@@ -5,10 +5,11 @@ import { toast } from 'react-toastify';
 import moment from 'moment/moment';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
+import useAxiosProtect from '../Components/hooks/useAxiosProtect';
 
 const Summary = () => {
     const axiosSecure = useAxiosSecure();
-    const { reFetch } = useContext(ContextData);
+    const { reFetch, tokenReady, user } = useContext(ContextData);
     const chartRef = useRef(null);
     const [loading, setLoading] = useState(true);
 
@@ -21,8 +22,14 @@ const Summary = () => {
 
     const todaysDate = moment(new Date()).format("DD.MM.YYYY");
 
+    const axiosProtect = useAxiosProtect();
     useEffect(() => {
-        axiosSecure.get("/getSummary")
+        if (tokenReady && user?.email) {
+            axiosProtect.get("/getSummary", {
+                params: {
+                    userEmail: user?.email,
+                  },
+            })
             .then((response) => {
                 setSummaryData(response.data);
                 setLoading(false);
@@ -31,7 +38,9 @@ const Summary = () => {
             .catch((error) => {
                 toast.error("Error fetching summary data:", error);
             });
-    }, [reFetch, axiosSecure]);
+        }
+        
+    }, [reFetch, axiosProtect, tokenReady, user?.email]);
 
     const { saleSummary, purchaseSummary, expenseSummary } = summaryData;
 

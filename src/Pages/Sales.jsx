@@ -8,112 +8,112 @@ import useAxiosProtect from "../Components/hooks/useAxiosProtect";
 
 
 const Sales = () => {
-    const axiosSecure = useAxiosSecure();
-    const axiosProtect = useAxiosProtect();
+  const axiosSecure = useAxiosSecure();
+  const axiosProtect = useAxiosProtect();
 
-    const {reFetch,  user} = useContext(ContextData);
-    const [invoice, setInvoice] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [count, setCount] = useState({});
-    const [itemsPerPage, setItemsPerPages] = useState(20);
-    const [currentPage, setCurrentPage] = useState(1);
-
-
-
-    useEffect(()=> {
-      axiosProtect.get('/salesInvoices', {
-          params: {
-            userEmail: user?.email,
-            page: currentPage,
-            size: itemsPerPage,
-            search: searchTerm,
-          },
-        })
-        .then(res => {
-          setInvoice(res.data.result);
-          setCount(res.data.count);
-        }).catch(err => {
-          toast.error('Server error', err);
-        });
-    
-      },[reFetch, currentPage, itemsPerPage, searchTerm, axiosProtect]);
+  const { reFetch, user } = useContext(ContextData);
+  const [invoice, setInvoice] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [count, setCount] = useState({});
+  const [itemsPerPage, setItemsPerPages] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
 
 
-      useEffect(() => {
-        axiosSecure
-          .get("/salesInvoiceCount")
-          .then((res) => {
-            setCount(res.data.count);
-          })
-          .catch((err) => {
-            toast.error("Server error", err);
-          });
-      }, [reFetch]);
 
-      // Pagination
-      const totalItem = count;
-      const numberOfPages = Math.ceil(totalItem / itemsPerPage);
-    
-      const renderPageNumbers = () => {
-        const pageNumbers = [];
-        const maxPagesToShow = 5; // Maximum number of page buttons to show
-        const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
-        const totalPages = numberOfPages;
-    
-        if (totalPages <= maxPagesToShow) {
-          for (let i = 1; i <= totalPages; i++) {
-            pageNumbers.push(i);
-          }
-        } else {
-          if (currentPage <= halfMaxPagesToShow) {
-            for (let i = 1; i <= maxPagesToShow; i++) {
-              pageNumbers.push(i);
-            }
-            pageNumbers.push('...', totalPages);
-          } else if (currentPage > totalPages - halfMaxPagesToShow) {
-            pageNumbers.push(1, '...');
-            for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
-              pageNumbers.push(i);
-            }
-          } else {
-            pageNumbers.push(1, '...');
-            for (let i = currentPage - halfMaxPagesToShow; i <= currentPage + halfMaxPagesToShow; i++) {
-              pageNumbers.push(i);
-            }
-            pageNumbers.push('...', totalPages);
-          }
+  useEffect(() => {
+    axiosProtect.get('/salesInvoices', {
+      params: {
+        userEmail: user?.email,
+        page: currentPage,
+        size: itemsPerPage,
+        search: searchTerm,
+      },
+    })
+      .then(res => {
+        setInvoice(res.data.result);
+        setCount(res.data.count);
+      }).catch(err => {
+        toast.error('Server error', err);
+      });
+
+  }, [reFetch, currentPage, itemsPerPage, searchTerm, axiosProtect]);
+
+
+  useEffect(() => {
+    axiosSecure
+      .get("/salesInvoiceCount")
+      .then((res) => {
+        setCount(res.data.count);
+      })
+      .catch((err) => {
+        toast.error("Server error", err);
+      });
+  }, [reFetch]);
+
+  // Pagination
+  const totalItem = count;
+  const numberOfPages = Math.ceil(totalItem / itemsPerPage);
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxPagesToShow = 5; // Maximum number of page buttons to show
+    const halfMaxPagesToShow = Math.floor(maxPagesToShow / 2);
+    const totalPages = numberOfPages;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= halfMaxPagesToShow) {
+        for (let i = 1; i <= maxPagesToShow; i++) {
+          pageNumbers.push(i);
         }
-    
-        return pageNumbers;
-      };
-    
-    
-    
-      const handleItemsPerPage = (e) => {
-        const val = parseInt(e.target.value);
-        setItemsPerPages(val);
-        setCurrentPage(1);
-      };
-    
-      const handlePrevPage = () => {
-        if (currentPage > 1) {
-          setCurrentPage(currentPage - 1);
+        pageNumbers.push('...', totalPages);
+      } else if (currentPage > totalPages - halfMaxPagesToShow) {
+        pageNumbers.push(1, '...');
+        for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
+          pageNumbers.push(i);
         }
-      };
-    
-      const handleNextPage = () => {
-        if (currentPage < numberOfPages) {
-          setCurrentPage(currentPage + 1);
+      } else {
+        pageNumbers.push(1, '...');
+        for (let i = currentPage - halfMaxPagesToShow; i <= currentPage + halfMaxPagesToShow; i++) {
+          pageNumbers.push(i);
         }
-      };
-    
-      const handlePageClick = (page) => {
-        setCurrentPage(page);
-        // any other logic to handle page change
-      };
+        pageNumbers.push('...', totalPages);
+      }
+    }
 
-       // search input onchange
-   const handleInputChange = (event) => {
+    return pageNumbers;
+  };
+
+
+
+  const handleItemsPerPage = (e) => {
+    const val = parseInt(e.target.value);
+    setItemsPerPages(val);
+    setCurrentPage(1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < numberOfPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+    // any other logic to handle page change
+  };
+
+  // search input onchange
+  const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1); // reset to first page on new search
   };
@@ -121,7 +121,7 @@ const Sales = () => {
   // View invoice details
 
   const viewInvoice = (invoiceNumber) => {
-    window.open(`/salesInvoice/${invoiceNumber}`,'_blank');
+    window.open(`/salesInvoice/${invoiceNumber}`, '_blank');
   };
 
   return (
@@ -152,14 +152,16 @@ const Sales = () => {
       {/* load data */}
       <div>
         <div className="overflow-x-auto pb-5">
-          <table className="table table-zebra">
+          <table className="table">
             {/* head */}
             <thead>
               <tr className="border bg-green-200 text-black">
                 <th className="w-[10%]">Date</th>
                 <th className="w-[12%]">Invoice No</th>
                 <th>Customer Name</th>
-                <th className="w-[10%]">Amount</th>
+                <th className="w-[10%]">Invoice Amount</th>
+                <th className="w-[10%]">Paid Amount</th>
+                <th className="w-[10%]">Due Amount</th>
                 <th className="w-[10%]">User</th>
                 <th className="">Action</th>
               </tr>
@@ -167,20 +169,27 @@ const Sales = () => {
             <tbody>
               {/* row 1 */}
               {
-                Array.isArray(invoice) && 
-                invoice.map(invoice => 
-                  <tr key={invoice._id}>
-                  <td>{invoice.date}</td>
-                  <td>{invoice.invoiceNumber}</td>
-                  <td>{invoice.customerName}</td>
-                  <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
-                  <td>{invoice.userName}</td>
-                  <td className="text-center w-[8%]"> <IoEyeOutline onClick={()=> viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer"/></td>
+                Array.isArray(invoice) &&
+                invoice.map(invoice =>
+                  <tr key={invoice._id} className={`
+                    ${invoice.userName == 'ARIF2020' ? 'bg-cyan-100' :
+                      invoice.userName == 'ASAD1010' ? 'bg-slate-300' : ''}
+                      ${invoice.dueAmount > 0 ? 'text-red-600': ''}
+                    
+                    `}>
+                    <td>{invoice.date}</td>
+                    <td>{invoice.invoiceNumber}</td>
+                    <td>{invoice.customerName}</td>
+                    <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
+                    <td>{parseFloat(invoice.finalPayAmount).toFixed(2)}</td>
+                    <td>{parseFloat(invoice.dueAmount).toFixed(2)}</td>
+                    <td>{invoice.userName}</td>
+                    <td className="text-center w-[8%]"> <IoEyeOutline onClick={() => viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer" /></td>
 
-              </tr>
+                  </tr>
                 )
               }
-              
+
             </tbody>
           </table>
         </div>
@@ -200,9 +209,8 @@ const Sales = () => {
             <button
               key={index}
               onClick={() => typeof page === 'number' && handlePageClick(page)}
-              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${
-                currentPage === page ? "!bg-gray-600" : ""
-              }`}
+              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${currentPage === page ? "!bg-gray-600" : ""
+                }`}
               disabled={typeof page !== 'number'}
             >
               {page}
@@ -230,7 +238,7 @@ const Sales = () => {
           </select>
         </div>
       )}
-      
+
     </div>
   );
 };

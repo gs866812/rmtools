@@ -7,6 +7,7 @@ import AddCustomer from "../AddCustomer/AddCustomer";
 import moment from "moment";
 import Swal from "sweetalert2";
 import Select from "react-select";
+import useAxiosProtect from "../hooks/useAxiosProtect";
 
 const NewQuotation = () => {
   const {
@@ -18,7 +19,7 @@ const NewQuotation = () => {
     userName,
     setItemsPerPage,
     customerCount,
-    productCount
+    tokenReady
   } = useContext(ContextData);
   const axiosSecure = useAxiosSecure();
 
@@ -140,9 +141,11 @@ const NewQuotation = () => {
   };
 
   // get quotation product temporarily list
+  const axiosProtect = useAxiosProtect();
 
   useEffect(() => {
-    axiosSecure
+    if (tokenReady && user?.email) {
+      axiosProtect
       .get(`/tempQuotationProductList/${user?.email}`)
       .then((data) => {
         setTempProductList(data.data);
@@ -150,7 +153,9 @@ const NewQuotation = () => {
       .catch((err) => {
         toast.error("Server error", err);
       });
-  }, [reFetch]);
+    }
+    
+  }, [reFetch, tokenReady, user?.email]);
 
   const quotationProductListAmount = Array.isArray(tempProductList)
     ? tempProductList.map(

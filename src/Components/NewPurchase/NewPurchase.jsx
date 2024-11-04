@@ -8,6 +8,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import Select from "react-select"; // Import react-select
+import useAxiosProtect from "../hooks/useAxiosProtect";
 
 const NewPurchase = () => {
   const {
@@ -17,10 +18,12 @@ const NewPurchase = () => {
     mainBalance,
     userName,
     setItemsPerPage,
+    tokenReady,
   } = useContext(ContextData);
 
   const [allProducts, setAllProducts] = useState([]);
   const axiosSecure = useAxiosSecure();
+  const axiosProtect = useAxiosProtect();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [purchaseQuantity, setPurchaseQuantity] = useState("");
   const [brand, setBrand] = useState("");
@@ -39,15 +42,22 @@ const NewPurchase = () => {
   const [newSupplier, setNewSupplier] = useState({});
 
   useEffect(() => {
-    axiosSecure
-      .get("/newPurchaseProducts")
-      .then((data) => {
-        setAllProducts(data.data.products); // Now you get all products
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, [reFetch]);
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get("/newPurchaseProducts", {
+          params: {
+            userEmail: user?.email,
+          },
+        })
+        .then((data) => {
+          setAllProducts(data.data.products); // Now you get all products
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+        });
+    }
+
+  }, [reFetch, tokenReady, user?.email, axiosProtect]);
 
 
   const handleInputPurchaseQuantity = (event) => {
@@ -158,15 +168,18 @@ const NewPurchase = () => {
   // get purchase product temporarily list
 
   useEffect(() => {
-    axiosSecure
-      .get(`/tempPurchaseProductList/${user?.email}`)
-      .then((data) => {
-        setTempProductList(data.data);
-      })
-      .catch((err) => {
-        toast.error("Server error", err);
-      });
-  }, [reFetch]);
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get(`/tempPurchaseProductList/${user?.email}`)
+        .then((data) => {
+          setTempProductList(data.data);
+        })
+        .catch((err) => {
+          toast.error("Server error", err);
+        });
+    }
+
+  }, [reFetch, tokenReady, user?.email]);
 
   // delete temp product
   const handleTempProduct = (_id) => {
@@ -666,9 +679,8 @@ const NewPurchase = () => {
                 Previous
               </p>
               <button
-                className={`py-1 px-5 rounded-md bg-green-600 text-white ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`py-1 px-5 rounded-md bg-green-600 text-white ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
               >
                 Proceed

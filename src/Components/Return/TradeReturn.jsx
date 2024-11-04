@@ -5,13 +5,15 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import useAxiosProtect from "../hooks/useAxiosProtect";
 
 const TradeReturn = () => {
   const axiosSecure = useAxiosSecure();
-  const { reFetch, setReFetch } = useContext(ContextData);
+
+  const { reFetch, setReFetch, user, tokenReady } = useContext(ContextData);
+
   const [invoiceNumberValue, setInvoiceNumberValue] = useState("");
-  const [supplierInvoiceNumberValue, setSupplierInvoiceNumberValue] =
-    useState("");
+  const [supplierInvoiceNumberValue, setSupplierInvoiceNumberValue] = useState("");
   const [invoice, setInvoice] = useState(null);
   const [supplierInvoice, setSupplierInvoice] = useState(null);
   const [newGrandTotal, setNewGrandTotal] = useState(0);
@@ -72,30 +74,38 @@ const TradeReturn = () => {
     }
   };
 
+  const axiosProtect = useAxiosProtect();
   const handleSearchInvoice = (e) => {
     e.preventDefault();
     document.getElementById("supplier").classList.add("hidden");
     document.getElementById("customer").classList.remove("hidden");
     const invoiceNumber = parseInt(invoiceNumberValue);
-    axiosSecure
-      .get(`/returnCustomerInvoice/${invoiceNumber}`)
-      .then((res) => {
-        let fetchedInvoice = res.data;
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get(`/returnCustomerInvoice/${invoiceNumber}`, {
+          params: {
+            userEmail: user?.email,
+          },
+        })
+        .then((res) => {
+          let fetchedInvoice = res.data;
 
-        // Check if finalPayAmount is greater than grandTotal
-        if (fetchedInvoice.finalPayAmount >= fetchedInvoice.grandTotal) {
-          fetchedInvoice.finalPayAmount = fetchedInvoice.grandTotal;
-        }
+          // Check if finalPayAmount is greater than grandTotal
+          if (fetchedInvoice.finalPayAmount >= fetchedInvoice.grandTotal) {
+            fetchedInvoice.finalPayAmount = fetchedInvoice.grandTotal;
+          }
 
-        if (fetchedInvoice.customized) {
-          toast.info(`Invoice modifying for ${res.data.customized + 1} times`);
-        }
-        setInvoice(fetchedInvoice);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-    setInvoiceNumberValue("");
+          if (fetchedInvoice.customized) {
+            toast.info(`Invoice modifying for ${res.data.customized + 1} times`);
+          }
+          setInvoice(fetchedInvoice);
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
+      setInvoiceNumberValue("");
+    }
+
   };
 
   // supplier invoice
@@ -105,18 +115,26 @@ const TradeReturn = () => {
     document.getElementById("supplier").classList.remove("hidden");
     document.getElementById("customer").classList.add("hidden");
     const invoiceNumber = parseInt(supplierInvoiceNumberValue);
-    axiosSecure
-      .get(`/returnSupplierInvoice/${invoiceNumber}`)
-      .then((res) => {
-        if (res.data.message) {
-          return toast.error(res.data.message);
-        }
-        setSupplierInvoice(res.data);
-      })
-      .catch((err) => {
-        toast.error(err);
-      });
-    setSupplierInvoiceNumberValue("");
+
+    if (tokenReady && user?.email) {
+      axiosSecure
+        .get(`/returnSupplierInvoice/${invoiceNumber}`, {
+          params: {
+            userEmail: user?.email,
+          },
+        })
+        .then((res) => {
+          if (res.data.message) {
+            return toast.error(res.data.message);
+          }
+          setSupplierInvoice(res.data);
+        })
+        .catch((err) => {
+          toast.error(err);
+        });
+      setSupplierInvoiceNumberValue("");
+    }
+
   };
 
   // const handleUpdateProductQuantity = (productId, newQuantity) => {
@@ -541,9 +559,8 @@ const TradeReturn = () => {
             </div>
             <div className="flex justify-end mt-5">
               <button
-                className={`bg-green-500 px-3 py-1 text-white rounded-sm ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-green-500 px-3 py-1 text-white rounded-sm ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
                 onClick={handleSaveChanges}
               >
@@ -679,9 +696,8 @@ const TradeReturn = () => {
             </div>
             <div className="flex justify-end mt-5">
               <button
-                className={`bg-green-500 px-3 py-1 text-white ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-green-500 px-3 py-1 text-white ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
                 onClick={handleSupplierSaveChanges}
               >

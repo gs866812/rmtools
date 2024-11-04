@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Select from "react-select";
+import useAxiosProtect from "../hooks/useAxiosProtect";
 
 const NewSale = () => {
   const {
@@ -15,9 +16,10 @@ const NewSale = () => {
     reFetch,
     userName,
     setItemsPerPage,
-    customerCount,
+    tokenReady
   } = useContext(ContextData);
   const axiosSecure = useAxiosSecure();
+  const axiosProtect = useAxiosProtect();
 
   const [allProducts, setAllProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -27,8 +29,9 @@ const NewSale = () => {
   const [category, setCategory] = useState("");
   const [unit, setUnit] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
+  const [salesPrice, setSalesPrice] = useState('');
   const [salesQuantity, setSalesQuantity] = useState("");
-  const [salesPrice, setSalesPrice] = useState("");
+  const [purchaseQuantity, setPurchaseQuantity] = useState("");
   const [available, setAvailable] = useState(null);
   const [tempProductList, setTempProductList] = useState([]);
   let [discount, setDiscount] = useState("");
@@ -41,15 +44,22 @@ const NewSale = () => {
   const [newCustomer, setNewCustomer] = useState({});
 
   useEffect(() => {
-    axiosSecure
-      .get("/newSaleProducts")
-      .then((data) => {
-        setAllProducts(data.data.products); // Now you get all products
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }, [reFetch]);
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get("/newSaleProducts", {
+          params: {
+            userEmail: user.email, // Ensure email is sent with the request
+          },
+        })
+        .then((data) => {
+          setAllProducts(data.data.products); // Now you get all products
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+        });
+    }
+
+  }, [reFetch, tokenReady, user?.email]);
 
 
   const handleInputSalesQuantity = (event) => {
@@ -57,7 +67,11 @@ const NewSale = () => {
     const onlyNumberRegex = /^\d*\.?\d*$/;
     if (onlyNumberRegex.test(salesQuantityValue)) {
       setSalesQuantity(salesQuantityValue);
-    }
+    };
+    const sale = parseFloat(salesQuantityValue);
+    const purchase = parseFloat(purchaseQuantity);
+    sale > purchase ?
+      toast.error(`You have only ${purchase} in stock`) && setAvailable(`You have only ${purchase} in stock`) : setAvailable(null)
   };
 
   const handleInputSalesPrice = (event) => {
@@ -89,12 +103,12 @@ const NewSale = () => {
         .post(`/getSalesPrice/${selectedOption.value}`)
         .then((res) => {
           if (res.data.salesPrice) {
-            setSalesPrice(res.data.salesPrice);
+            setSalesPrice(res.data?.salesPrice);
             setAvailable(null);
-            setPurchasePrice(res.data.purchasePrice);
+            setPurchasePrice(res.data?.purchasePrice);
+            setPurchaseQuantity(res.data?.purchaseQuantity);
           } else {
             setAvailable("Stock not available");
-            toast.error("Stock not available");
             toast.error(res.data);
           }
         })
@@ -168,7 +182,8 @@ const NewSale = () => {
   // get sales product temporarily list
 
   useEffect(() => {
-    axiosSecure
+    if (tokenReady && user?.email) {
+      axiosProtect
       .get(`/tempSalesProductList/${user?.email}`)
       .then((data) => {
         setTempProductList(data.data);
@@ -176,7 +191,9 @@ const NewSale = () => {
       .catch((err) => {
         toast.error("Server error", err);
       });
-  }, [reFetch]);
+    }
+    
+  }, [reFetch, tokenReady, user?.email]);
 
   const salesProductListAmount = Array.isArray(tempProductList)
     ? tempProductList.map(
@@ -407,13 +424,16 @@ const NewSale = () => {
       </div>
       {/* ........................................... */}
 
-      <div className="border py-10 mt-5 border-gray-200 px-5 rounded-md shadow-md">
+      <div className="border py-10 mt-5 border-gray-200 px-5 rounded-md shadow-md relative">
+        <span className="absolute text-gray-300 top-2 left-5">{purchasePrice}</span>
+        <span className="absolute text-gray-400 top-0 left-[75%] border p-1 rounded-md">{purchaseQuantity}</span>
         <form
           onSubmit={handleSalesProduct}
           className="flex flex-col gap-3"
           id="add_product"
         >
           <label className="flex gap-2 items-center flex-wrap">
+
             <Select
               options={productOptions}
               onChange={handleProductChange}
@@ -454,7 +474,7 @@ const NewSale = () => {
               className="border p-2 rounded-md outline-none"
             />
             <button
-              className={`bg-green-500 text-white py-2 px-3 rounded-md cursor-pointer ${available ? "opacity-50 cursor-default" : ""
+              className={`bg-green-500 text-white py-2 px-3 rounded-md cursor-pointer ${available ? "opacity-50 cursor-none" : ""
                 }`}
               disabled={available || isAddButtonDisabled}
             >

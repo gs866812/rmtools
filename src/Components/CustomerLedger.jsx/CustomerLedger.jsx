@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { FaFileExcel, FaRegFileExcel } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 import { ContextData } from "../../Provider";
 import useAxiosProtect from "../hooks/useAxiosProtect";
@@ -12,7 +12,7 @@ import excel from "../../assets/images/excel.png";
 const CustomerLedger = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const { reFetch, setReFetch, user } = useContext(ContextData);
+  const { reFetch, tokenReady, user } = useContext(ContextData);
 
   const [allCustomer, setAllCustomer] = useState([]);
   const [customer, setCustomer] = useState([]);
@@ -66,15 +66,22 @@ const CustomerLedger = () => {
   // Make excel
   // Get all customer for excel
   useEffect(() => {
-    axiosProtect
-      .get(`/allCustomer`)
+    if (tokenReady && user?.email) {
+      axiosProtect
+      .get(`/allCustomer`, {
+        params: {
+          userEmail: user?.email,
+        },
+      })
       .then((data) => {
         setAllCustomer(data.data);
       })
       .catch((err) => {
         toast.error("Server error", err);
       });
-  }, [reFetch]);
+    }
+    
+  }, [reFetch, tokenReady, axiosProtect, user?.email]);
   const downloadExcel = () => {
     // Format the data to include only the desired columns
     const formattedData = allCustomer.map((customer) => ({
@@ -179,20 +186,9 @@ const CustomerLedger = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <h2 className="text-2xl uppercase font-bold">Customer ledger</h2>
-          <img
-            src={excel}
-            alt="Excel"
-            className="w-[20px] h-[20%] cursor-pointer ml-5"
-            title="Download full list"
-            onClick={downloadExcel}
-          />
-          <img
-            src={excel}
-            alt="Excel"
-            className="w-[20px] h-[20%] cursor-pointer ml-5"
-            title="Download current list"
-            onClick={downloadExcelCurrent}
-          />
+          <FaFileExcel className="w-[20px] h-[20%] cursor-pointer ml-5 text-red-600" title="Download full list" onClick={downloadExcel}/>
+          <FaRegFileExcel className="w-[20px] h-[20%] cursor-pointer text-green-600" title="Download current list" onClick={downloadExcelCurrent}/>
+
         </div>
         <label className="flex gap-1 items-center border py-1 px-3 rounded-md">
           <input
