@@ -15,10 +15,13 @@ const SingleCustomerLedger = () => {
   const { reFetch, setReFetch, userName, user } = useContext(ContextData);
   const [filteredSalesHistory, setFilteredSalesHistory] = useState([]);
   const [payAmount, setPayAmount] = useState("");
+  const [confirmAmount, setConfirmAmount] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [note, setNote] = useState("");
+  const [method, setMethod] = useState("");
 
   const location = useLocation();
   const pathParts = location.pathname.split("/");
@@ -62,10 +65,73 @@ const SingleCustomerLedger = () => {
     }
   };
 
-  const handleReset = () => {
-    setPayAmount("");
+  const handleConfirmAmount = (event) => {
+    const payValue = event.target.value;
+    const onlyNumberRegex = /^\d*\.?\d*$/;
+    if (onlyNumberRegex.test(payValue)) {
+      setConfirmAmount(payValue);
+    }
   };
 
+  const handleReset = () => {
+    setPayAmount("");
+    setNote("");
+    setMethod("");
+    setConfirmAmount("");
+  };
+  // handle rcv by account
+  const handleReceivedByAccount = () => {
+    document.getElementById("payDueByAccount").showModal()
+  };
+  // handle payment account
+  const handlePaymentAccount = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    if (isLoading) return;
+
+    setIsLoading(true); // Set loading to true
+    const date = moment(new Date()).format("DD.MM.YYYY");
+    const paidAmount = parseFloat(payAmount);
+    const paymentMethod = "Paid by Account";
+    const payNote = note;
+
+    const paymentInfo = { date, paidAmount, paymentMethod, payNote, userName };
+    if (paidAmount > singleCustomer.dueAmount) {
+      setIsLoading(false); // Reset loading state
+      return toast.error("Can't over payment");
+    };
+
+    if (singleCustomer.acBalance < paidAmount) {
+      setIsLoading(false); // Reset loading state
+      return toast.error("No available balance");
+    };
+
+
+
+    axiosSecure
+      .post(`/payCustomerByAccount/${id}`, paymentInfo)
+      .then((res) => {
+        const modal = document.querySelector(`#payDueByAccount`);
+        modal.close();
+        if (res.data === "success") {
+          handleReset();
+          setMethod("");
+          setNote("");
+          form.reset();
+          setReFetch(!reFetch);
+          Swal.fire({
+            title: "Payment success",
+            icon: "success",
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error("Server error", err);
+      })
+      .finally(() => {
+        setIsLoading(false); // Reset loading state
+      });
+  };
   //   ...............................
   const handlePayment = (e) => {
     e.preventDefault();
@@ -75,8 +141,8 @@ const SingleCustomerLedger = () => {
     const date = moment(new Date()).format("DD.MM.YYYY");
     const form = e.target;
     const paidAmount = parseFloat(payAmount);
-    const paymentMethod = form.payment_method.value;
-    const payNote = form.pay_note.value;
+    const paymentMethod = method;
+    const payNote = note;
 
     const paymentInfo = { date, paidAmount, paymentMethod, payNote, userName };
     if (paidAmount > singleCustomer.dueAmount) {
@@ -91,6 +157,9 @@ const SingleCustomerLedger = () => {
         modal.close();
         if (res.data === "success") {
           handleReset();
+          setMethod("");
+          setNote("");
+          form.reset();
           setReFetch(!reFetch);
           Swal.fire({
             title: "Payment success",
@@ -183,6 +252,45 @@ const SingleCustomerLedger = () => {
     window.open(`/salesInvoice/${invoiceNumber}`, "_blank");
   };
 
+
+  const handleCustomerBalance = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const date = moment(new Date()).format("DD.MM.YYYY");
+    const receiveAmount = parseFloat(payAmount);
+    const receiveConfirmAmount = parseFloat(confirmAmount);
+    const paymentMethod = method;
+    const receiveNote = note;
+    const receivedInfo = { date, receiveAmount, receiveConfirmAmount, paymentMethod, receiveNote, userName };
+
+    if (receiveAmount != receiveConfirmAmount) {
+      setIsLoading(false);
+      return toast.error("Amount do not match");
+    }
+
+    axiosSecure.post(`/receiveCustomerBalance/${id}`, receivedInfo)
+      .then((res) => {
+        const modal = document.querySelector(`#addCustomerBalance`);
+        modal.close();
+        if (res.data == "success") {
+          handleReset();
+          setMethod("");
+          setNote('');
+          setConfirmAmount('');
+          form.reset();
+          setReFetch(!reFetch);
+          Swal.fire({
+            title: "Balance added successfully",
+            icon: "success",
+          });
+        }
+      }).catch((error) => {
+        toast.error("Server error", error);
+      }).finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div className="px-2">
       <h2 className="text-2xl my-5 pl-2 uppercase font-bold">
@@ -219,6 +327,33 @@ const SingleCustomerLedger = () => {
           <div className="overflow-x-auto">
             <table className="table table-zebra">
               <tbody>
+                <tr>
+                  <th className="w-[30%]">Customer Balance:</th>
+                  <td className="relative">
+                    BDT: {parseFloat(singleCustomer?.acBalance).toFixed(2) || 0}
+                    <button onClick={() =>
+                      document.getElementById("addCustomerBalance").showModal()} className="absolute bg-green-300 py-3 px-2 right-0 top-0 border-l border-gray-500">Add Balance</button>
+                  </td>
+                  <td className="!p-0">
+                    {singleCustomer?.acBalance > 0 ? (
+                      <button
+                        onClick={handleReceivedByAccount}
+                        className="w-full py-3 text-center bg-yellow-500 text-white"
+                      >
+                        Received
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleReceivedByAccount}
+                        className="w-full py-3 text-center bg-gray-500 text-white"
+                        disabled
+                      >
+                        Received
+                      </button>
+                    )}
+                  </td>
+                </tr>
+
                 <tr>
                   <th>Total Due:</th>
                   <td>
@@ -354,6 +489,163 @@ const SingleCustomerLedger = () => {
           </div>
         )}
       </div>
+      {/* add customer balance */}
+      <div>
+        <dialog id="addCustomerBalance" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg mb-3 uppercase">
+              Customer Balance:
+            </h3>
+            <hr />
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white bg-red-400 hover:bg-red-500">
+                ✕
+              </button>
+            </form>
+            <form onSubmit={handleCustomerBalance} className="mt-5 space-y-3">
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Amount:</p>{" "}
+                <input
+                  type="text"
+                  name="receive_amount"
+                  placeholder="Receive amount"
+                  onChange={handlePayAmount}
+                  value={payAmount}
+                  className="py-1 px-2 rounded-md outline-none border w-full"
+                  required
+                />
+              </label>
+
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Confirm Amount:</p>{" "}
+                <input
+                  type="text"
+                  name="confirm_amount"
+                  placeholder="Confirm Amount"
+                  onChange={handleConfirmAmount}
+                  value={confirmAmount}
+                  className="py-1 px-2 rounded-md outline-none border w-full "
+                  required
+                />
+              </label>
+
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Method:</p>{" "}
+                <input
+                  type="text"
+                  name="payment_method"
+                  placeholder="Payment method"
+                  onChange={(event) => setMethod(event.target.value)}
+                  className="py-1 px-2 rounded-md outline-none border w-full"
+                  required
+                />
+              </label>
+
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Note:</p>{" "}
+                <input
+                  type="text"
+                  name="receive_note"
+                  placeholder="Receive Note"
+                  onChange={(event) => setNote(event.target.value)}
+                  className="py-1 px-2 rounded-md outline-none border w-full"
+                  required
+                />
+              </label>
+
+              <span className="flex items-start justify-end gap-3">
+                <input
+                  onClick={() => handleReset()}
+                  type="reset"
+                  value="Reset"
+                  className="bg-yellow-300 py-2 px-4 rounded-md"
+                />
+                <button
+                  className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  disabled={isLoading}
+                >
+                  Add Balance
+                </button>
+              </span>
+            </form>
+          </div>
+        </dialog>
+      </div>
+
+      {/* pay by account  modal */}
+      <div>
+        <dialog id="payDueByAccount" className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg mb-3 uppercase">
+              Customer payment:
+            </h3>
+            <hr />
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white bg-red-400 hover:bg-red-500">
+                ✕
+              </button>
+            </form>
+            <form onSubmit={handlePaymentAccount} className="mt-5 space-y-3">
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Pay amount:</p>{" "}
+                <input
+                  type="text"
+                  name="pay_amount"
+                  placeholder="Pay amount"
+                  onChange={handlePayAmount}
+                  value={payAmount}
+                  className="py-1 px-2 rounded-md outline-none border w-full"
+                  required
+                />
+              </label>
+
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Method:</p>{" "}
+                <input
+                  type="text"
+                  name="payment_method"
+                  placeholder="Paid by Account"
+                  defaultValue="Paid by Account"
+                  readOnly
+                  className="py-1 px-2 rounded-md outline-none border w-full bg-red-200"
+                  required
+                />
+              </label>
+
+              <label className="flex items-center">
+                <p className="w-1/2 font-semibold">Note:</p>{" "}
+                <input
+                  type="text"
+                  name="pay_note"
+                  placeholder="Note"
+                  onChange={(event) => setNote(event.target.value)}
+                  className="py-1 px-2 rounded-md outline-none border w-full"
+                  required
+                />
+              </label>
+
+              <span className="flex items-start justify-end gap-3">
+                <input
+                  onClick={() => handleReset()}
+                  type="reset"
+                  value="Reset"
+                  className="bg-yellow-300 py-2 px-4 rounded-md"
+                />
+                <button
+                  className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  disabled={isLoading}
+                >
+                  PAY
+                </button>
+              </span>
+            </form>
+          </div>
+        </dialog>
+      </div>
 
       {/* pay  modal */}
       <div>
@@ -389,6 +681,7 @@ const SingleCustomerLedger = () => {
                   type="text"
                   name="payment_method"
                   placeholder="Payment method"
+                  onChange={(event) => setMethod(event.target.value)}
                   className="py-1 px-2 rounded-md outline-none border w-full"
                   required
                 />
@@ -400,6 +693,7 @@ const SingleCustomerLedger = () => {
                   type="text"
                   name="pay_note"
                   placeholder="Note"
+                  onChange={(event) => setNote(event.target.value)}
                   className="py-1 px-2 rounded-md outline-none border w-full"
                   required
                 />
@@ -413,9 +707,8 @@ const SingleCustomerLedger = () => {
                   className="bg-yellow-300 py-2 px-4 rounded-md"
                 />
                 <button
-                  className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                   disabled={isLoading}
                 >
                   PAY

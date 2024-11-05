@@ -47,7 +47,7 @@ const Provider = ({ children }) => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       try {
-        const response = await axios.post("http://localhost:9000/validate-token", null, {
+        const response = await axios.post("https://backendsafe.com/validate-token", null, {
           headers: { Authorization: `Bearer ${token}` }
       });  
         if (response.data.success) {
@@ -316,11 +316,11 @@ const Provider = ({ children }) => {
   };
 
   // Optionally handle loading or token validation
-  // if (!tokenReady && loading) {
-  //   return <div className="flex justify-center items-center lg:p-20 mt-5 lg:mt-0">
-  //   <span className="loading loading-dots loading-lg"></span>
-  // </div> // Show loading while validating the token
-  // }
+  if (!tokenReady && loading) {
+    return <div className="flex justify-center items-center lg:p-20 mt-5 lg:mt-0">
+    <span className="loading loading-dots loading-lg"></span>
+  </div> // Show loading while validating the token
+  }
 
   return <ContextData.Provider value={info}>{children}</ContextData.Provider>;
 };
