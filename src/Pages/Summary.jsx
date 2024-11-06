@@ -28,18 +28,18 @@ const Summary = () => {
             axiosProtect.get("/getSummary", {
                 params: {
                     userEmail: user?.email,
-                  },
+                },
             })
-            .then((response) => {
-                setSummaryData(response.data);
-                setLoading(false);
+                .then((response) => {
+                    setSummaryData(response.data);
+                    setLoading(false);
 
-            })
-            .catch((error) => {
-                toast.error("Error fetching summary data:", error);
-            });
+                })
+                .catch((error) => {
+                    toast.error("Error fetching summary data:", error);
+                });
         }
-        
+
     }, [reFetch, axiosProtect, tokenReady, user?.email]);
 
     const { saleSummary, purchaseSummary, expenseSummary } = summaryData;
@@ -143,7 +143,7 @@ const Summary = () => {
                         Total Expense
                     </h2>
                     <h2 className='text-center mt-10 text-red-600 text-4xl'>
-                    {loading ? <span className="loading loading-spinner loading-xs"></span> : expenseSummary.todaysCost}
+                        {loading ? <span className="loading loading-spinner loading-xs"></span> : expenseSummary.todaysCost}
                     </h2>
 
                 </div>

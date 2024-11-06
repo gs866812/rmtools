@@ -131,7 +131,8 @@ const Home = () => {
       {/* --------------------------------------------------------- */}
 
       {/* dashboard cards */}
-      <div className="grid grid-cols-5 gap-5 mt-12">
+      
+      {/* <div className="grid grid-cols-5 gap-5 mt-12">
         <Link to="/summary">
           <div className="flex flex-col items-center py-3 px-7 rounded-lg shadow border gap-5">
             <img src={summary} alt="sales" className="w-[60%]" />
@@ -196,7 +197,7 @@ const Home = () => {
           <img src={logout} alt="Purchase Report" className="w-[60%]" />
           <p className="text-center">Logout</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

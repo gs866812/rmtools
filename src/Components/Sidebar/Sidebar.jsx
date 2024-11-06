@@ -2,10 +2,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo_white.png";
 
 import {
-  FcBearish,
   FcBullish,
   FcBusinessman,
-  FcCurrencyExchange,
   FcDocument,
   FcElectricity,
   FcInTransit,
@@ -25,7 +23,7 @@ import { ContextData } from "../../Provider";
 
 const Sidebar = () => {
   const axiosSecure = useAxiosSecure();
-  const { reFetch, setReFetch, userName } = useContext(ContextData);
+  const { reFetch, setReFetch, userName, logOut } = useContext(ContextData);
   const [newCostAmount, setNewCostAmount] = useState("");
   const [confirmCostAmount, setConfirmCostAmount] = useState("");
   const [notes, setNotes] = useState("");
@@ -119,109 +117,129 @@ const Sidebar = () => {
       </div>
 
       <nav className="text-[#C1C1C1] mt-5 w-full">
-        <div>
+        <div className="border rounded-md">
           <NavLink
             to="/"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcShop className="text-xl" /> Dashboard
           </NavLink>
         </div>
 
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/sales"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcBullish className="text-xl" /> Sales
           </NavLink>
         </div>
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/purchase"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcLowPriority className="text-xl" /> Purchase
           </NavLink>
         </div>
-        <div>
+        <div className="border rounded-md mt-1">
+          <StockPopUp />
+        </div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/quotation"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcDocument className="text-xl" /> Quotation
           </NavLink>
         </div>
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/customer"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcBusinessman className="text-xl" /> Customer
           </NavLink>
         </div>
 
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/product"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcPaid className="text-xl" /> Product
           </NavLink>
         </div>
 
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/supplier"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcInTransit className="text-xl" />
             Supplier{" "}
           </NavLink>
         </div>
 
-        <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0">
+        <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0 border rounded-md">
           <input type="checkbox" />
-          <div className="collapse-title flex items-center gap-2 px-2">
+          <div className="collapse-title flex items-center gap-2 px-1">
             <FcList className="text-xl" /> Ledger
           </div>
           <div className="collapse-content">
             <NavLink
               to="/supplierLedger"
-              className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md border"
             >
               Supplier
             </NavLink>
 
             <NavLink
               to="/customerLedger"
-              className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md border mt-1"
             >
               Customer
             </NavLink>
           </div>
         </div>
 
-        <div>
-          <NavLink
-            to="/balance"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
-          >
-            <FcCurrencyExchange className="text-xl" />
-            Balance{" "}
-          </NavLink>
+        <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0 border rounded-md">
+          <input type="checkbox" />
+          <div className="collapse-title flex items-center gap-2 px-1">
+            <FcElectricity className="text-xl" /> Expense List
+          </div>
+          <div className="collapse-content">
+
+            <button
+              onClick={() =>
+                document.getElementById("AddNewCostingInSidebar").showModal()
+              }
+              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md border"
+            >
+              New Expense{" "}
+            </button>
+
+            <NavLink
+              to="/balance"
+              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md border mt-1"
+            >
+              Balance
+            </NavLink>
+
+            <NavLink
+              to="/expenseList"
+              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md border mt-1"
+            >
+              Expense List{" "}
+            </NavLink>
+
+
+          </div>
         </div>
 
+
         <div>
-          <button
-            onClick={() =>
-              document.getElementById("AddNewCostingInSidebar").showModal()
-            }
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
-          >
-            <FcBearish className="text-xl" />
-            New Expense{" "}
-          </button>
+
           {/* modal */}
           <dialog id="AddNewCostingInSidebar" className="modal text-black">
             <div className="modal-box">
@@ -295,24 +313,12 @@ const Sidebar = () => {
           </dialog>
         </div>
 
-        <div>
-          <StockPopUp />
-        </div>
 
-        <div>
-          <NavLink
-            to="/expenseList"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
-          >
-            <FcElectricity className="text-xl" />
-            Expense List{" "}
-          </NavLink>
-        </div>
 
-        <div>
+        <div className="border rounded-md mt-1">
           <NavLink
             to="/return"
-            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px]"
+            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcLeft className="text-xl" />
             Return{" "}
@@ -320,14 +326,15 @@ const Sidebar = () => {
         </div>
 
         {/* User */}
-        <div>
+        <div className="border rounded-md mt-1 flex">
           <div className="w-10">
             <img
-            className="rounded-full"
-            title={userName}
+              className="rounded-l-md"
+              title={userName}
               alt="Tailwind CSS Navbar component"
               src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
           </div>
+          <button onClick={() => logOut()} className="bg-red-500 w-full rounded-r-md text-start pl-3 hover:bg-red-700">Log Out</button>
         </div>
       </nav>
     </div>
