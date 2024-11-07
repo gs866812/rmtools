@@ -143,9 +143,9 @@ const QuotationInvoice = () => {
                   <td>{product.productTitle}</td>
                   <td className="text-center">{product.salesQuantity}</td>
                   <td className="text-center">{product.salesUnit}</td>
-                  <td className="text-center">{product.salesPrice}</td>
+                  <td className="text-center">{parseFloat(product.salesPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="text-right">
-                    {(product.salesQuantity * product.salesPrice).toFixed(2)}
+                    {parseFloat(product.salesQuantity * product.salesPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                 </tr>
               ))}
@@ -166,7 +166,7 @@ const QuotationInvoice = () => {
             <tr>
               <td>Total</td>
               <td className="text-right w-[38%]">
-                {parseFloat(invoice.totalAmount).toFixed(2)}
+                {parseFloat(invoice.totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
@@ -180,7 +180,7 @@ const QuotationInvoice = () => {
             <tr>
               <td>Grand Total</td>
               <td className="text-right">
-                {parseFloat(invoice.grandTotal).toFixed(2)}
+                {parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>

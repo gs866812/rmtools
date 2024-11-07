@@ -172,7 +172,7 @@ const Quotation = () => {
                     <td>{invoice.date}</td>
                     <td>{invoice.customerName}</td>
                     <td>{invoice.contactNumber}</td>
-                    <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
+                    <td>{parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td>{invoice.userName}</td>
                     <td className="text-center w-[8%]">
                       {" "}
@@ -202,9 +202,8 @@ const Quotation = () => {
             <button
               key={index}
               onClick={() => typeof page === "number" && handlePageClick(page)}
-              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${
-                currentPage === page ? "!bg-gray-600" : ""
-              }`}
+              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${currentPage === page ? "!bg-gray-600" : ""
+                }`}
               disabled={typeof page !== "number"}
             >
               {page}

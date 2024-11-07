@@ -174,15 +174,17 @@ const Sales = () => {
                   <tr key={invoice._id} className={`
                     ${invoice.userName == 'ARIF2020' ? 'bg-cyan-100' :
                       invoice.userName == 'ASAD1010' ? 'bg-slate-300' : ''}
-                      ${invoice.dueAmount > 0 ? 'text-red-600': ''}
+                      ${invoice.dueAmount > 0 ? 'text-red-600' : ''}
                     
                     `}>
                     <td>{invoice.date}</td>
                     <td>{invoice.invoiceNumber}</td>
                     <td>{invoice.customerName}</td>
-                    <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
-                    <td>{parseFloat(invoice.finalPayAmount).toFixed(2)}</td>
-                    <td>{parseFloat(invoice.dueAmount).toFixed(2)}</td>
+                    <td>
+                      {parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td>{parseFloat(invoice.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>{parseFloat(invoice.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td>{invoice.userName}</td>
                     <td className="text-center w-[8%]"> <IoEyeOutline onClick={() => viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer" /></td>
 

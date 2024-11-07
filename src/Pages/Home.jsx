@@ -12,15 +12,14 @@ import logout from "../assets/images/logout.png";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { ContextData } from "../Provider";
-import useAxiosSecure from "../Components/hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import useAxiosProtect from "../Components/hooks/useAxiosProtect";
 import Summary from "./Summary";
 
+
 const Home = () => {
-  const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const { mainBalance, stock, logOut, reFetch, setMainBalance, currentPage, itemsPerPage, searchStock, user, setCount, setStock } = useContext(ContextData);
+  const { mainBalance, reFetch, setMainBalance, currentPage, itemsPerPage, searchStock, user, setCount, setStock } = useContext(ContextData);
 
 
   const [supplierDue, setSupplierDue] = useState([]);
@@ -31,11 +30,12 @@ const Home = () => {
   const parseBalance = parseFloat(mBalance || 0);
   const currentBalance = parseFloat(parseBalance.toFixed(2)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+  const formattedTotalStock = parseFloat(totalStock || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const formattedCustomerDue = parseFloat(customerDue[0]?.customerDueBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const formattedSupplierDue = parseFloat(supplierDue[0]?.supplierDueBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  // const totalStock = stock.reduce((acc, stock) => acc + stock.purchaseQuantity, 0);
-  // const totalStock = Array.isArray(stock)
-  //   ? stock.reduce((acc, item) => acc + item.purchaseQuantity, 0)
-  //   : 0;
+
+
 
   useEffect(() => {
     axiosProtect.get('/supplierTotalDueBalance', {
@@ -100,38 +100,38 @@ const Home = () => {
   return (
     <div className="p-2">
       <div className="flex justify-between gap-2">
-        <div className="w-full bg">
+        <div className="w-full animate__fadeInDown animate__animated">
           <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-green-600 text-white">
             <h2 className="text-xl font-bold">BDT {currentBalance}</h2>
             <p>CURRENT BALANCE</p>
           </div>
         </div>
-        <div className="w-full bg">
-          <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-green-600 text-white">
-            <h2 className="text-xl font-bold">{parseFloat(totalStock || 0).toFixed(2)}</h2>
+        <div className="w-full animate__fadeInDown animate__animated">
+          <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-green-500 text-white">
+            <h2 className="text-xl font-bold">{formattedTotalStock}</h2>
             <p>CURRENT STOCK</p>
           </div>
         </div>
-        <div className="w-full bg">
+        <div className="w-full animate__fadeInDown animate__animated">
           <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-yellow-500 text-white">
-            <h2 className="text-xl font-bold">BDT: {parseFloat(customerDue[0]?.customerDueBalance || 0).toFixed(2)}</h2>
+            <h2 className="text-xl font-bold">BDT: {formattedCustomerDue}</h2>
             <p>CUSTOMER DUE</p>
           </div>
         </div>
-        <div className="w-full bg">
+        <div className="w-full animate__fadeInDown animate__animated">
           <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-red-500 text-white">
-            <h2 className="text-xl font-bold">BDT: {parseFloat(supplierDue[0]?.supplierDueBalance || 0).toFixed(2)}</h2>
+            <h2 className="text-xl font-bold">BDT: {formattedSupplierDue}</h2>
             <p>SUPPLIER DUE</p>
           </div>
         </div>
       </div>
 
       {/* --------------------------------------------------------- */}
-      <Summary/>
+      <Summary />
       {/* --------------------------------------------------------- */}
 
       {/* dashboard cards */}
-      
+
       {/* <div className="grid grid-cols-5 gap-5 mt-12">
         <Link to="/summary">
           <div className="flex flex-col items-center py-3 px-7 rounded-lg shadow border gap-5">

@@ -172,7 +172,7 @@ const SupplierLedger = () => {
                     <td>{supplier.contactNumber}</td>
                     <td>
                     {supplier.dueAmount > 0
-                        ? <span>BDT: {(supplier.dueAmount.toFixed(2))}</span>
+                        ? <span>BDT: {parseFloat(supplier.dueAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                         : null}
                     </td>
                     <td>

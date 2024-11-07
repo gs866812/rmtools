@@ -227,7 +227,7 @@ const SingleSupplierLedger = () => {
                 <tr>
                   <th>Total Due:</th>
                   <td>
-                    BDT: {parseFloat(singleSupplier.dueAmount).toFixed(2)}
+                    BDT: {parseFloat(singleSupplier.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="p-0">
                     {singleSupplier.dueAmount > 0 ? (
@@ -254,7 +254,7 @@ const SingleSupplierLedger = () => {
                 </tr>
                 <tr>
                   <th>Total Paid:</th>
-                  <td>BDT: {parseFloat(totalPaid).toFixed(2) || 0}</td>
+                  <td>BDT: {parseFloat(totalPaid).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0}</td>
                   <td
                     onClick={() =>
                       document.getElementById("paymentHistory").showModal()
@@ -315,9 +315,9 @@ const SingleSupplierLedger = () => {
                 <tr key={purchase.invoiceNumber}>
                   <td>{purchase.date}</td>
                   <td>{purchase.invoiceNumber}</td>
-                  <td>BDT: {parseFloat(purchase.grandTotal).toFixed(2)}</td>
-                  <td>BDT: {parseFloat(purchase.finalPayAmount).toFixed(2)}</td>
-                  <td>BDT: {parseFloat(purchase.dueAmount).toFixed(2)}</td>
+                  <td>BDT: {parseFloat(purchase.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>BDT: {parseFloat(purchase.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>BDT: {parseFloat(purchase.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td>{purchase.userName}</td>
                   <td className="text-center w-[8%]">
                     {" "}
@@ -417,9 +417,8 @@ const SingleSupplierLedger = () => {
               />
 
               <button
-                className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-green-500 py-2 px-4 rounded-md text-white hover:bg-green-600 cursor-pointer ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 disabled={isLoading}
               >
                 PAY

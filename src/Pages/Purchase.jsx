@@ -11,7 +11,7 @@ import useAxiosProtect from "../Components/hooks/useAxiosProtect";
 const Purchase = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const {reFetch, setItemsPerPage, user} = useContext(ContextData);
+  const { reFetch, setItemsPerPage, user } = useContext(ContextData);
   const [invoice, setInvoice] = useState([]);
   const [count, setCount] = useState({});
   const [itemsPerPage, setItemsPerPages] = useState(20);
@@ -19,8 +19,8 @@ const Purchase = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
 
-  useEffect(()=> {
-    axiosProtect.get('/invoices' , {
+  useEffect(() => {
+    axiosProtect.get('/invoices', {
       params: {
         userEmail: user?.email,
         page: currentPage,
@@ -28,14 +28,14 @@ const Purchase = () => {
         search: searchTerm,
       },
     })
-    .then(res => {
-      setInvoice(res.data.result);
-      setCount(res.data.count);
-    }).catch(err => {
-      toast.error('Server error', err);
-    });
+      .then(res => {
+        setInvoice(res.data.result);
+        setCount(res.data.count);
+      }).catch(err => {
+        toast.error('Server error', err);
+      });
 
-  },[reFetch, currentPage, itemsPerPage, searchTerm, axiosProtect]);
+  }, [reFetch, currentPage, itemsPerPage, searchTerm, axiosProtect]);
 
 
   useEffect(() => {
@@ -111,16 +111,16 @@ const Purchase = () => {
     // any other logic to handle page change
   };
 
-       // search input onchange
-       const handleInputChange = (event) => {
-        setSearchTerm(event.target.value);
-        setCurrentPage(1); // reset to first page on new search
-       };
+  // search input onchange
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // reset to first page on new search
+  };
 
-        // View invoice details
+  // View invoice details
 
   const viewInvoice = (invoiceNumber) => {
-    window.open(`/purchaseInvoice/${invoiceNumber}`,'_blank');
+    window.open(`/purchaseInvoice/${invoiceNumber}`, '_blank');
   };
 
   return (
@@ -177,26 +177,26 @@ const Purchase = () => {
             </thead>
             <tbody>
               {/* row 1 */}
-              {Array.isArray(invoice) && 
-                invoice.map(invoice => 
+              {Array.isArray(invoice) &&
+                invoice.map(invoice =>
                   <tr key={invoice._id} className={`
-                    ${invoice.userName == 'ARIF2020'? 'bg-cyan-100':
-                    invoice.userName == 'ASAD1010'? 'bg-slate-300':''}
-                    ${invoice.dueAmount > 0 ? 'text-red-500': ''}
+                    ${invoice.userName == 'ARIF2020' ? 'bg-cyan-100' :
+                      invoice.userName == 'ASAD1010' ? 'bg-slate-300' : ''}
+                    ${invoice.dueAmount > 0 ? 'text-red-500' : ''}
                     `}>
-                  <td>{invoice.date}</td>
-                  <td>{invoice.invoiceNumber}</td>
-                  <td>{invoice.supplierName}</td>
-                  <td>{parseFloat(invoice.grandTotal).toFixed(2)}</td>
-                  <td>{parseFloat(invoice.finalPayAmount).toFixed(2)}</td>
-                  <td>{parseFloat(invoice.dueAmount).toFixed(2)}</td>
-                  <td>{invoice.userName}</td>
-                  <td className="text-center w-[8%]"> <IoEyeOutline onClick={()=> viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer"/></td>
+                    <td>{invoice.date}</td>
+                    <td>{invoice.invoiceNumber}</td>
+                    <td>{invoice.supplierName}</td>
+                    <td>{parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>{parseFloat(invoice.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>{parseFloat(invoice.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>{invoice.userName}</td>
+                    <td className="text-center w-[8%]"> <IoEyeOutline onClick={() => viewInvoice(invoice.invoiceNumber)} className="text-xl cursor-pointer" /></td>
 
-              </tr>
+                  </tr>
                 )
               }
-              
+
             </tbody>
           </table>
         </div>
@@ -216,9 +216,8 @@ const Purchase = () => {
             <button
               key={index}
               onClick={() => typeof page === 'number' && handlePageClick(page)}
-              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${
-                currentPage === page ? "!bg-gray-600" : ""
-              }`}
+              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${currentPage === page ? "!bg-gray-600" : ""
+                }`}
               disabled={typeof page !== 'number'}
             >
               {page}

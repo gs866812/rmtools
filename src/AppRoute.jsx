@@ -26,12 +26,10 @@ import QuotationInvoice from "./Components/PdfMaker/QuotationInvoice";
 import TradeReturn from "./Components/Return/TradeReturn";
 import Summary from "./Pages/Summary";
 import ExpenseList from "./Components/ExpenseList/ExpenseList";
+import Debt from "./Pages/Debt";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
-  { path: "/salesInvoice/:invoiceNumber", element: <PdfInvoice /> },
-  { path: "/purchaseInvoice/:invoiceNumber", element: <PurchaseInvoice /> },
-  { path: "/quotation/:id", element: <QuotationInvoice /> },
   {
     path: "/",
     element: (
@@ -40,7 +38,7 @@ export const router = createBrowserRouter([
           <Root />
         </DeviceRestriction>
       </Protected>
-    ), errorElement: <NotFound/>,
+    ), errorElement: <NotFound />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/sales", element: <Sales /> },
@@ -61,6 +59,10 @@ export const router = createBrowserRouter([
       { path: "/return", element: <TradeReturn /> },
       { path: "/summary", element: <Summary /> },
       { path: "/expenseList", element: <ExpenseList /> },
+      { path: "/salesInvoice/:invoiceNumber", element: <PdfInvoice /> },
+      { path: "/purchaseInvoice/:invoiceNumber", element: <PurchaseInvoice /> },
+      { path: "/quotation/:id", element: <QuotationInvoice /> },
+      { path: "/debt", element: <Debt/> },
     ],
   },
 ]);

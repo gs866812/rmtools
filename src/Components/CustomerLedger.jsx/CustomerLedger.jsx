@@ -68,19 +68,19 @@ const CustomerLedger = () => {
   useEffect(() => {
     if (tokenReady && user?.email) {
       axiosProtect
-      .get(`/allCustomer`, {
-        params: {
-          userEmail: user?.email,
-        },
-      })
-      .then((data) => {
-        setAllCustomer(data.data);
-      })
-      .catch((err) => {
-        toast.error("Server error", err);
-      });
+        .get(`/allCustomer`, {
+          params: {
+            userEmail: user?.email,
+          },
+        })
+        .then((data) => {
+          setAllCustomer(data.data);
+        })
+        .catch((err) => {
+          toast.error("Server error", err);
+        });
     }
-    
+
   }, [reFetch, tokenReady, axiosProtect, user?.email]);
   const downloadExcel = () => {
     // Format the data to include only the desired columns
@@ -186,8 +186,8 @@ const CustomerLedger = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <h2 className="text-2xl uppercase font-bold">Customer ledger</h2>
-          <FaFileExcel className="w-[20px] h-[20%] cursor-pointer ml-5 text-red-600" title="Download full list" onClick={downloadExcel}/>
-          <FaRegFileExcel className="w-[20px] h-[20%] cursor-pointer text-green-600" title="Download current list" onClick={downloadExcelCurrent}/>
+          <FaFileExcel className="w-[20px] h-[20%] cursor-pointer ml-5 text-red-600" title="Download full list" onClick={downloadExcel} />
+          <FaRegFileExcel className="w-[20px] h-[20%] cursor-pointer text-green-600" title="Download current list" onClick={downloadExcelCurrent} />
 
         </div>
         <label className="flex gap-1 items-center border py-1 px-3 rounded-md">
@@ -230,7 +230,7 @@ const CustomerLedger = () => {
                     <td>{customer.contactNumber}</td>
                     <td>
                       {customer.dueAmount > 0
-                        ? <span>BDT: {(customer.dueAmount.toFixed(2))}</span>
+                        ? <span>BDT: {parseFloat(customer.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         : null}
                     </td>
                     <td className="text-center">
@@ -263,9 +263,8 @@ const CustomerLedger = () => {
             <button
               key={index}
               onClick={() => typeof page === "number" && handlePageClick(page)}
-              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${
-                currentPage === page ? "!bg-gray-600" : ""
-              }`}
+              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${currentPage === page ? "!bg-gray-600" : ""
+                }`}
               disabled={typeof page !== "number"}
             >
               {page}

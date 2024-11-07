@@ -142,9 +142,9 @@ const PdfInvoice = () => {
                   <td>{product.productTitle}</td>
                   <td className="text-center">{product.salesQuantity}</td>
                   <td className="text-center">{product.salesUnit}</td>
-                  <td className="text-center">{product.salesPrice}</td>
+                  <td className="text-center">{parseFloat(product.salesPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="text-right">
-                    {(product.salesQuantity * product.salesPrice).toFixed(2)}
+                    {parseFloat(product.salesQuantity * product.salesPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                 </tr>
               ))}
@@ -165,7 +165,7 @@ const PdfInvoice = () => {
             <tr>
               <td>Total</td>
               <td className="text-right w-[38%]">
-                {parseFloat(invoice.totalAmount).toFixed(2)}
+                {parseFloat(invoice.totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
@@ -179,13 +179,13 @@ const PdfInvoice = () => {
             <tr>
               <td>Grand Total</td>
               <td className="text-right">
-                {parseFloat(invoice.grandTotal).toFixed(2)}
+                {parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
               <td>Paid Amount</td>
               <td className="text-right">
-                {parseFloat(invoice.finalPayAmount).toFixed(2)}
+                {parseFloat(invoice.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr className={`${invoice.refund <= 0 && invoice.dueAmount <= 0? 'hidden': ''}`}>
@@ -194,7 +194,7 @@ const PdfInvoice = () => {
               }</td>
               <td className="text-right">
                 {invoice.refund > 0?
-                `${parseFloat(invoice.refund).toFixed(2) || 0 }` : `${parseFloat(invoice.dueAmount).toFixed(2) || 0 }`
+                `${parseFloat(invoice.refund).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0 }` : `${parseFloat(invoice.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0 }`
                 }
               </td>
             </tr>

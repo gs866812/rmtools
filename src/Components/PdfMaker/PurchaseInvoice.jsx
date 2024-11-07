@@ -118,9 +118,9 @@ const PurchaseInvoice = () => {
                   <td>{product.productTitle}</td>
                   <td className="text-center">{product.purchaseQuantity}</td>
                   <td className="text-center">{product.purchaseUnit}</td>
-                  <td className="text-center">{product.purchasePrice}</td>
+                  <td className="text-center">{parseFloat(product.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="text-right">
-                    {(product.purchaseQuantity * product.purchasePrice).toFixed(2)}
+                    {(product.purchaseQuantity * product.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                 </tr>
               ))}
@@ -141,36 +141,36 @@ const PurchaseInvoice = () => {
             <tr>
               <td>Total</td>
               <td className="text-right w-[38%]">
-                {parseFloat(invoice.totalAmount).toFixed(2)}
+                {parseFloat(invoice.totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
               <td>Discount</td>
               <td className="text-right">
                 {invoice.discountAmount > 0
-                  ? parseFloat(invoice.discountAmount).toFixed(2)
+                  ? parseFloat(invoice.discountAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                   : "N/A"}
               </td>
             </tr>
             <tr>
               <td>Grand Total</td>
               <td className="text-right">
-                {parseFloat(invoice.grandTotal).toFixed(2)}
+                {parseFloat(invoice.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
               <td>Paid Amount</td>
               <td className="text-right">
-                {parseFloat(invoice.finalPayAmount).toFixed(2)}
+                {parseFloat(invoice.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </td>
             </tr>
             <tr>
-              <td>{invoice.refund >= 0?
-              'Refund after deductions' : 'Due Amount'
+              <td>{invoice.refund >= 0 ?
+                'Refund after deductions' : 'Due Amount'
               }</td>
               <td className="text-right">
-              {invoice.refund >= 0?
-                `${parseFloat(invoice.refund) || 0 .toFixed(2)}` : `${parseFloat(invoice.dueAmount) || 0 .toFixed(2)}`
+                {invoice.refund >= 0 ?
+                  `${parseFloat(invoice.refund).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0}` : `${parseFloat(invoice.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0}`
                 }
               </td>
             </tr>

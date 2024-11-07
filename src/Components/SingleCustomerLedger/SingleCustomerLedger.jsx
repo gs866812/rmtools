@@ -328,40 +328,40 @@ const SingleCustomerLedger = () => {
             <table className="table table-zebra">
               <tbody>
                 {
-                  singleCustomer?.acBalance?
-                  <tr>
-                    <th className="w-[35%]">Customer Balance:</th>
-                    <td className="relative">
-                      BDT: {parseFloat(singleCustomer?.acBalance).toFixed(2) || 0}
-                      <button onClick={() =>
-                        document.getElementById("addCustomerBalance").showModal()} className="absolute bg-green-300 py-3 px-2 right-0 top-0 border-l border-gray-500">Add Balance</button>
-                    </td>
-                    
-                    <td className="!p-0">
-                      {singleCustomer?.acBalance > 0 ? (
-                        <button
-                          onClick={handleReceivedByAccount}
-                          className="w-full py-3 text-center bg-yellow-500 text-white"
-                        >
-                          Received
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleReceivedByAccount}
-                          className="w-full py-3 text-center bg-gray-500 text-white"
-                          disabled
-                        >
-                          Received
-                        </button>
-                      )}
-                    </td>
-                  </tr> : null
+                  singleCustomer?.acBalance ?
+                    <tr>
+                      <th className="w-[35%]">Customer Balance:</th>
+                      <td className="relative">
+                        BDT: {parseFloat(singleCustomer?.acBalance).toFixed(2) || 0}
+                        <button onClick={() =>
+                          document.getElementById("addCustomerBalance").showModal()} className="absolute bg-green-300 py-3 px-2 right-0 top-0 border-l border-gray-500">Add Balance</button>
+                      </td>
+
+                      <td className="!p-0">
+                        {singleCustomer?.acBalance > 0 ? (
+                          <button
+                            onClick={handleReceivedByAccount}
+                            className="w-full py-3 text-center bg-yellow-500 text-white"
+                          >
+                            Received
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleReceivedByAccount}
+                            className="w-full py-3 text-center bg-gray-500 text-white"
+                            disabled
+                          >
+                            Received
+                          </button>
+                        )}
+                      </td>
+                    </tr> : null
                 }
 
                 <tr>
                   <th>Total Due:</th>
                   <td>
-                    BDT: {parseFloat(singleCustomer.dueAmount).toFixed(2)}
+                    BDT: {parseFloat(singleCustomer.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="!p-0">
                     {singleCustomer.dueAmount > 0 ? (
@@ -388,7 +388,7 @@ const SingleCustomerLedger = () => {
                 </tr>
                 <tr>
                   <th>Total Paid:</th>
-                  <td>BDT: {parseFloat(totalPaid).toFixed(2) || 0}</td>
+                  <td>BDT: {parseFloat(totalPaid).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 0}</td>
                   <td
                     onClick={() =>
                       document.getElementById("paymentHistory").showModal()
@@ -451,9 +451,9 @@ const SingleCustomerLedger = () => {
                 <tr key={sale.invoiceNumber}>
                   <td>{sale.date}</td>
                   <td>{sale.invoiceNumber}</td>
-                  <td>BDT: {parseFloat(sale.grandTotal).toFixed(2)}</td>
-                  <td>BDT: {parseFloat(sale.finalPayAmount).toFixed(2)}</td>
-                  <td>BDT: {parseFloat(sale.dueAmount).toFixed(2)}</td>
+                  <td>BDT: {parseFloat(sale.grandTotal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>BDT: {parseFloat(sale.finalPayAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>BDT: {parseFloat(sale.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td>{sale.userName}</td>
                   <td className="text-center w-[8%]">
                     {" "}

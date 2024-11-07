@@ -167,7 +167,7 @@ const CurrentStock = () => {
       "Product Name": stk.productTitle,
       Quantity: stk.purchaseQuantity,
       "Norm's": stk.reOrderQuantity,
-      Price: stk.salesPrice,
+      Price: stk.purchasePrice,
       Unit: stk.purchaseUnit,
       Brand: stk.brand,
       Category: stk.category,
@@ -200,7 +200,7 @@ const CurrentStock = () => {
         parseFloat(stk.purchaseQuantity).toFixed(2),
         stk.purchaseUnit,
         parseFloat(stk.reOrderQuantity).toFixed(2),
-        parseFloat(stk.salesPrice).toFixed(2),
+        parseFloat(stk.purchasePrice).toFixed(2),
       ];
       tableRows.push(stockData);
     });
@@ -342,13 +342,13 @@ const CurrentStock = () => {
                       <td>{stock.productID}</td>
                       <td>{stock.productTitle}</td>
                       <td className="text-center">
-                        {parseFloat(stock.purchaseQuantity).toFixed(2)}
+                        {parseFloat(stock.purchaseQuantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td>{stock.purchaseUnit}</td>
                       <td className="text-center">{stock.category}</td>
                       <td className="text-center">{stock.brand}</td>
                       <td className="text-center">
-                        {parseFloat(stock.purchasePrice).toFixed(2)}
+                        {parseFloat(stock.purchasePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="text-center">{stock.storage}</td>
                       <td className="text-center">
