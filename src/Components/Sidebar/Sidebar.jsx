@@ -195,8 +195,11 @@ const Sidebar = () => {
           </NavLink>
         </div>
 
+
+
+
         <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0  animate__animated animate__backInDown">
-          <input type="checkbox" />
+          <input type="checkbox"/>
           <div className="collapse-title flex items-center gap-2 px-1">
             <FcList className="text-xl" /> Ledger
           </div>
@@ -355,7 +358,7 @@ const Sidebar = () => {
               className="rounded-l-md"
               title={userName}
               alt={userName}
-              src={userName == 'ARIF2020'? 'https://iili.io/2zUIE3G.jpg' : userName == 'DEVELOPER'? 'https://iili.io/2BqJhuf.png': userName == 'ASAD1010'? 'https://iili.io/2zUIGaf.jpg' : null} />
+              src={userName == 'ARIF2020' ? 'https://iili.io/2zUIE3G.jpg' : userName == 'DEVELOPER' ? 'https://iili.io/2BqJhuf.png' : userName == 'ASAD1010' ? 'https://iili.io/2zUIGaf.jpg' : null} />
           </div>
           <button onClick={() => logOut()} className="bg-red-500 w-full rounded-r-md text-start pl-3 hover:bg-red-700 ">Log Out</button>
         </div>

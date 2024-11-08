@@ -6,16 +6,19 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ContextData } from "../../Provider";
 import useAxiosProtect from "../hooks/useAxiosProtect";
+import { FaFileExcel, FaRegFileExcel } from "react-icons/fa";
+import * as XLSX from "xlsx";
 
 const SupplierLedger = () => {
   const axiosSecure = useAxiosSecure();
   const axiosProtect = useAxiosProtect();
-  const { reFetch, setReFetch, user } = useContext(ContextData);
+  const { reFetch, setReFetch, user, tokenReady } = useContext(ContextData);
   const [searchTerm, setSearchTerm] = useState("");
   const [supplier, setSupplier] = useState([]);
   const [count, setCount] = useState({});
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [allSupplier, setAllSupplier] = useState([]);
 
   // get supplier due list
   useEffect(() => {
@@ -126,10 +129,65 @@ const SupplierLedger = () => {
     setCurrentPage(1); // reset to first page on new search
   };
 
+  // Download full excel
+  useEffect(() => {
+    if (tokenReady && user?.email) {
+      axiosProtect
+        .get(`/allSupplier`, {
+          params: {
+            userEmail: user?.email,
+          },
+        })
+        .then((data) => {
+          setAllSupplier(data.data);
+        })
+        .catch((err) => {
+          toast.error("Server error", err);
+        });
+    }
+
+  }, [reFetch, tokenReady, axiosProtect, user?.email]);
+
+  const downloadExcel = () => {
+    // Format the data to include only the desired columns
+    const formattedData = allSupplier.map((supplier) => ({
+      "Supplier ID": supplier.supplierSerial,
+      "Supplier Name": supplier.supplierName,
+      "Contact No": supplier.contactNumber,
+      "Address ": supplier.supplierAddress,
+      "Due amount ": supplier.dueAmount,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Due List");
+    XLSX.writeFile(workbook, "supplierDueList.xlsx");
+  };
+
+  const downloadExcelCurrent = () => {
+    // Format the data to include only the desired columns
+    const formattedData = supplier.map((supplier) => ({
+      "Supplier ID": supplier.supplierSerial,
+      "Supplier Name": supplier.supplierName,
+      "Contact No": supplier.contactNumber,
+      "Address ": supplier.supplierAddress,
+      "Due amount ": supplier.dueAmount,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Due List");
+    XLSX.writeFile(workbook, "currentPageCustomerDueList.xlsx");
+  };
+
   return (
     <div className="mt-5 px-2">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl uppercase font-bold">Supplier ledger</h2>
+        <div className="flex items-center">
+          <h2 className="text-2xl uppercase font-bold">Supplier ledger</h2>
+          <FaFileExcel className="w-[20px] h-[20%] cursor-pointer ml-5 text-red-600" title="Download full list" onClick={downloadExcel} />
+          <FaRegFileExcel className="w-[20px] h-[20%] cursor-pointer text-green-600" title="Download current list" onClick={downloadExcelCurrent} />
+        </div>
         <label className="flex gap-1 items-center border py-1 px-3 rounded-md">
           <input
             onChange={handleInputChange}
@@ -171,8 +229,8 @@ const SupplierLedger = () => {
                     <td>{supplier.contactPerson}</td>
                     <td>{supplier.contactNumber}</td>
                     <td>
-                    {supplier.dueAmount > 0
-                        ? <span>BDT: {parseFloat(supplier.dueAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                      {supplier.dueAmount > 0
+                        ? <span>BDT: {parseFloat(supplier.dueAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                         : null}
                     </td>
                     <td>
@@ -204,9 +262,8 @@ const SupplierLedger = () => {
             <button
               key={index}
               onClick={() => typeof page === "number" && handlePageClick(page)}
-              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${
-                currentPage === page ? "!bg-gray-600" : ""
-              }`}
+              className={`py-2 px-5 bg-green-500 text-white rounded-md hover:bg-gray-600 ${currentPage === page ? "!bg-gray-600" : ""
+                }`}
               disabled={typeof page !== "number"}
             >
               {page}

@@ -7,7 +7,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { ContextData } from "../../Provider";
 import useAxiosProtect from "../hooks/useAxiosProtect";
 import * as XLSX from "xlsx";
-import excel from "../../assets/images/excel.png";
+
 
 const CustomerLedger = () => {
   const axiosSecure = useAxiosSecure();
@@ -85,6 +85,7 @@ const CustomerLedger = () => {
   const downloadExcel = () => {
     // Format the data to include only the desired columns
     const formattedData = allCustomer.map((customer) => ({
+      "Customer ID": customer.customerSerial,
       "Customer Name": customer.customerName,
       "Contact No": customer.contactNumber,
       "Address ": customer.customerAddress,
@@ -99,6 +100,7 @@ const CustomerLedger = () => {
   const downloadExcelCurrent = () => {
     // Format the data to include only the desired columns
     const formattedData = customer.map((customer) => ({
+      "Customer ID": customer.customerSerial,
       "Customer Name": customer.customerName,
       "Contact No": customer.contactNumber,
       "Address ": customer.customerAddress,
