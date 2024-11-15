@@ -10,7 +10,7 @@ import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { loginWithEmail, setUser, tokenReady, user} = useContext(ContextData);
+  const { loginWithEmail, setUser, tokenReady, user } = useContext(ContextData);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -19,26 +19,26 @@ const Login = () => {
 
   useEffect(() => {
     if (tokenReady && user) {
-        navigate(from, { replace: true });
+      navigate(from, { replace: true });
     }
-}, [tokenReady, user, navigate, from]);
+  }, [tokenReady, user, navigate, from]);
 
 
 
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
-  
+
     const email = e.target.email.value;
     const password = e.target.password.value;
-  
+
     try {
       const result = await loginWithEmail(email, password);
       const user = result.user;
       const emailData = { email: user.email };
-  
+
       // Request to get JWT token
-      const res = await axios.post('https://backendsafe.com/jwt', emailData);
+      const res = await axios.post('http://localhost:9000/jwt', emailData);
       if (res.data.token) {
         localStorage.setItem('jwtToken', res.data.token); // Store token in localStorage
         setUser(user); // Set the user context
@@ -56,14 +56,16 @@ const Login = () => {
       });
     }
   };
-  
-  
+
+
 
   return (
     <div className="">
       <div className="fanwood flex justify-center items-center lg:py-8 px-4 bg-gray-800 h-[100vh]">
         <div className="flex flex-col bg-gray-700 lg:p-14 md:p-10 p-5 lg:w-1/2 md:w-2/3 gap-3 mx-auto max-w-screen-2xl lg:bg-opacity-90 shadow-md border rounded-md">
-          <div><img src={logo} alt="" /></div>
+          <div>
+            <img src={logo} alt="" />
+          </div>
 
 
           <form className="flex flex-col gap-5 mt-5" onSubmit={handleEmailLogin}>

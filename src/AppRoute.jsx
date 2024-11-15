@@ -30,6 +30,9 @@ import Debt from "./Pages/Debt";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
+  { path: "/salesInvoice/:invoiceNumber", element: <PdfInvoice /> },
+  { path: "/purchaseInvoice/:invoiceNumber", element: <PurchaseInvoice /> },
+  { path: "/quotation/:id", element: <QuotationInvoice /> },
   {
     path: "/",
     element: (
@@ -59,10 +62,7 @@ export const router = createBrowserRouter([
       { path: "/return", element: <TradeReturn /> },
       { path: "/summary", element: <Summary /> },
       { path: "/expenseList", element: <ExpenseList /> },
-      { path: "/salesInvoice/:invoiceNumber", element: <PdfInvoice /> },
-      { path: "/purchaseInvoice/:invoiceNumber", element: <PurchaseInvoice /> },
-      { path: "/quotation/:id", element: <QuotationInvoice /> },
-      { path: "/debt", element: <Debt/> },
+      { path: "/debt", element: <Debt /> },
     ],
   },
 ]);

@@ -37,6 +37,7 @@ const CurrentStock = () => {
   const [productID, setProductID] = useState(null);
   const [confirmQuantity, setConfirmQuantity] = useState('');
   const [confirmPrice, setConfirmPrice] = useState('');
+  console.log(confirmQuantity, confirmPrice);
 
   useEffect(() => {
     axiosProtect
@@ -219,8 +220,8 @@ const CurrentStock = () => {
     setSelectedStockId(id);
     setProductName(selectedStock.productTitle);
     setProductID(selectedStock.productID);
-    setConfirmQuantity(selectedStock.purchaseQuantity);
-    setConfirmPrice(selectedStock.purchasePrice);
+    setConfirmQuantity(parseFloat(selectedStock.purchaseQuantity));
+    setConfirmPrice(parseFloat(selectedStock.purchasePrice));
     document.getElementById("editStock").showModal();
   };
   // ...................................................................
@@ -228,7 +229,7 @@ const CurrentStock = () => {
     const confirmStockQuantity = event.target.value;
     const onlyNumberRegex = /^\d*\.?\d*$/;
     if (onlyNumberRegex.test(confirmStockQuantity)) {
-      setConfirmQuantity(confirmStockQuantity);
+      setConfirmQuantity(parseFloat(confirmStockQuantity));
     }
   };
   // ...................................................................
@@ -236,7 +237,7 @@ const CurrentStock = () => {
     const confirmStockPrice = event.target.value;
     const onlyNumberRegex = /^\d*\.?\d*$/;
     if (onlyNumberRegex.test(confirmStockPrice)) {
-      setConfirmPrice(confirmStockPrice);
+      setConfirmPrice(parseFloat(confirmStockPrice));
     }
   };
 
@@ -244,8 +245,8 @@ const CurrentStock = () => {
     e.preventDefault();
     const selectedStock = stock.find((item) => item._id === selectedStockId);
     if (selectedStock) {
-      setConfirmQuantity(selectedStock.purchaseQuantity);
-      setConfirmPrice(selectedStock.purchasePrice);
+      setConfirmQuantity(parseFloat(selectedStock.purchaseQuantity));
+      setConfirmPrice(parseFloat(selectedStock.purchasePrice));
     }
 
   };
@@ -281,7 +282,7 @@ const CurrentStock = () => {
   
 
   return (
-    <div>
+    <div className="px-2">
       <div className="mt-5 pb-5">
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">

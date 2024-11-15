@@ -17,6 +17,7 @@ import {
   FcPaid,
   FcShop,
 } from "react-icons/fc";
+import { FaAngleDown, FaAnglesUp, FaAngleUp, FaUser } from "react-icons/fa6";
 import StockPopUp from "../StockPopUp/StockPopUp";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import moment from "moment";
@@ -32,6 +33,8 @@ const Sidebar = () => {
   const [confirmCostAmount, setConfirmCostAmount] = useState("");
   const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenExpense, setIsOpenExpense] = useState(false);
 
   // number validation
   const handleInputCostAmount = (event) => {
@@ -114,6 +117,13 @@ const Sidebar = () => {
   const isProduct = location.pathname === "/product";
   const isSupplier = location.pathname === "/supplier";
 
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const toggleDropdownExpense = () => {
+    setIsOpenExpense(!isOpenExpense);
+  };
+
   return (
     <div>
       <div className="sticky top-0 bg-[#2A3042] z-50">
@@ -124,7 +134,7 @@ const Sidebar = () => {
         <div className="rounded-md animate__animated animate__backInDown">
           <NavLink
             to="/"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcShop className="text-xl" /> Dashboard
           </NavLink>
@@ -133,7 +143,7 @@ const Sidebar = () => {
         <div className=" rounded-md animate__animated animate__backInDown mt-1">
           <NavLink
             to="/sales"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcBullish className="text-xl" /> Sales
           </NavLink>
@@ -141,7 +151,7 @@ const Sidebar = () => {
         <div className=" rounded-md animate__animated animate__backInDown mt-1">
           <NavLink
             to="/purchase"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcLowPriority className="text-xl" /> Purchase
           </NavLink>
@@ -153,7 +163,7 @@ const Sidebar = () => {
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/currentStock"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcBriefcase className="text-xl" /> Stock Balance
           </NavLink>
@@ -162,7 +172,7 @@ const Sidebar = () => {
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/quotation"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcDocument className="text-xl" /> Quotation
           </NavLink>
@@ -170,7 +180,7 @@ const Sidebar = () => {
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/customer"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcBusinessman className="text-xl" /> Customer
           </NavLink>
@@ -179,7 +189,7 @@ const Sidebar = () => {
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/product"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcPaid className="text-xl" /> Product
           </NavLink>
@@ -188,7 +198,7 @@ const Sidebar = () => {
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/supplier"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcInTransit className="text-xl" />
             Supplier{" "}
@@ -196,63 +206,70 @@ const Sidebar = () => {
         </div>
 
 
-
-
-        <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0  animate__animated animate__backInDown">
-          <input type="checkbox"/>
-          <div className="collapse-title flex items-center gap-2 px-1">
-            <FcList className="text-xl" /> Ledger
+        {/*  */}
+        <div className={`text-white rounded-md mt-1 ${isOpen? 'bg-gray-600' : ''}`}>
+          <div
+            className={`flex items-center justify-between cursor-pointer p-2 w-full hover:text-white gap-2 hover:bg-gray-600 mb-[1px] rounded-md ${isOpen? 'hover:bg-none' : ''}`}
+            onClick={toggleDropdown}
+          >
+            <div className="flex items-center gap-2">
+              <FcList className="text-xl" />
+              <span>Ledger</span>
+            </div>
+            <span>{isOpen ? <FaAngleUp /> : <FaAngleDown />}</span>
           </div>
-          <div className="collapse-content">
-            <NavLink
-              to="/supplierLedger"
-              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md "
-            >
-              Supplier
-            </NavLink>
-
-            <NavLink
-              to="/customerLedger"
-              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md  mt-1"
-            >
-              Customer
-            </NavLink>
-          </div>
+          {isOpen && (
+            <div className="text-gray-200 rounded-md p-2">
+              <NavLink
+                to="/supplierLedger"
+                className="block px-4 p-1 hover:bg-[#151515] rounded-md"
+              >
+                Supplier
+              </NavLink>
+              <NavLink
+                to="/customerLedger"
+                className="block px-4 p-1 hover:bg-[#151515] rounded-md mt-1"
+              >
+                Customer
+              </NavLink>
+            </div>
+          )}
         </div>
+        {/*  */}
 
-        <div className="collapse hover:bg-gray-600 mt-1 collapse-arrow hover:-z-0  animate__animated animate__backInDown ">
-          <input type="checkbox" />
-          <div className="collapse-title flex items-center gap-2 px-1">
-            <FcElectricity className="text-xl" /> Expense List
+
+
+           {/*  */}
+           <div className={`text-white rounded-md mt-1 ${isOpenExpense? 'bg-gray-600' : ''}`}>
+          <div
+            className={`flex items-center justify-between cursor-pointer p-2 w-full hover:text-white gap-2 hover:bg-gray-600 mb-[1px] rounded-md ${isOpenExpense? 'hover:bg-none' : ''}`}
+            onClick={toggleDropdownExpense}
+          >
+            <div className="flex items-center gap-2">
+              <FcElectricity className="text-xl" />
+              <span>Expense List</span>
+            </div>
+            <span>{isOpenExpense ? <FaAngleUp /> : <FaAngleDown />}</span>
           </div>
-          <div className="collapse-content">
-
-            <button
-              onClick={() =>
-                document.getElementById("AddNewCostingInSidebar").showModal()
-              }
-              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md "
-            >
-              New Expense{" "}
-            </button>
-
-            <NavLink
-              to="/balance"
-              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md  mt-1"
-            >
-              Balance
-            </NavLink>
-
-            <NavLink
-              to="/expenseList"
-              className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md  mt-1"
-            >
-              Total Expense{" "}
-            </NavLink>
-
-
-          </div>
+          {isOpenExpense && (
+            <div className="text-gray-200 rounded-md p-2">
+              <NavLink
+                to="/balance"
+                className="block px-4 p-1 hover:bg-[#151515] rounded-md"
+              >
+                Transactions
+              </NavLink>
+              <NavLink
+                to="/expenseList"
+                className="block px-4 p-1 hover:bg-[#151515] rounded-md mt-1"
+              >
+                Total Expense
+              </NavLink>
+            </div>
+          )}
         </div>
+        {/*  */}
+
 
 
         <div>
@@ -332,19 +349,24 @@ const Sidebar = () => {
 
 
 
-        <div className=" animate__animated animate__backInDown mt-1">
+        {
+          userName == "DEVELOPER" ? 
+          <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/debt"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcCurrencyExchange className="text-xl" />
             Debt{" "}
           </NavLink>
-        </div>
+        </div> : null
+        }
+
+
         <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/return"
-            className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+            className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
           >
             <FcLeft className="text-xl" />
             Return{" "}
@@ -358,7 +380,7 @@ const Sidebar = () => {
               className="rounded-l-md"
               title={userName}
               alt={userName}
-              src={userName == 'ARIF2020' ? 'https://iili.io/2zUIE3G.jpg' : userName == 'DEVELOPER' ? 'https://iili.io/2BqJhuf.png' : userName == 'ASAD1010' ? 'https://iili.io/2zUIGaf.jpg' : null} />
+              src={userName == 'ARIF2020' ? 'https://iili.io/2zUIE3G.jpg' : userName == 'DEVELOPER' ? 'https://iili.io/2BqJhuf.png' : userName == 'ASAD1010' ? 'https://iili.io/2zUIGaf.jpg' : userName == 'DEMO_USER' ? 'https://iili.io/2IoW4B1.png' : null} />
           </div>
           <button onClick={() => logOut()} className="bg-red-500 w-full rounded-r-md text-start pl-3 hover:bg-red-700 ">Log Out</button>
         </div>

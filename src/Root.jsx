@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Root = () => {
     return (
-        <div className="flex">
+        <div className="flex mx-auto">
 
         <div className="w-[20%] px-5 h-[100vh] overflow-y-scroll sticky top-0 sidebar bg-[#2A3042]">
             <Sidebar/>

@@ -197,7 +197,7 @@ const Expense = () => {
         <div className="w-full bg">
           <div className="flex flex-col gap-3 justify-center border px-3 py-6 shadow-lg text-center rounded-md bg-yellow-500 text-white">
             <h2 className="text-2xl font-bold">
-              BDT: {parseFloat((profit[0]?.profitBalance)).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits: 2}) || 0}
+              BDT: {parseFloat((profit[0]?.profitBalance || 0)).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits: 2})}
             </h2>
             <p>Total Profit</p>
           </div>

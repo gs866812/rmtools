@@ -99,7 +99,7 @@ const Summary = () => {
                 {/* ************************ */}
                 <div className="relative p-5 rounded-lg shadow-md overflow-hidden border-2 border-transparent animate__animated animate__zoomIn">
                     {/* Moving border effect */}
-                    <div className="absolute inset-0 rounded-lg border-animation"></div>
+                    {/* <div className="absolute inset-0 rounded-lg border-animation"></div> */}
 
                     {/* Content inside the border */}
                     <div className="relative z-10 bg-white rounded-lg">
@@ -163,7 +163,7 @@ const Summary = () => {
 
                 <div className="relative p-5 rounded-lg shadow-md overflow-hidden border-2 border-transparent animate__animated animate__zoomIn">
                     {/* Moving border effect */}
-                    <div className="absolute inset-0 rounded-lg border-animation"></div>
+                    {/* <div className="absolute inset-0 rounded-lg border-animation"></div> */}
                     <div className="relative z-10 bg-white rounded-lg">
                         <h2 className='text-2xl font-bold underline uppercase'>Purchase Summary</h2>
                         <div className='my-2 font-bold mt-5 text-center space-y-2'>
@@ -211,7 +211,7 @@ const Summary = () => {
 
                 <div className="relative p-5 rounded-lg shadow-md overflow-hidden border-2 border-transparent animate__animated animate__zoomIn">
                     {/* Moving border effect */}
-                    <div className="absolute inset-0 rounded-lg border-animation"></div>
+                    {/* <div className="absolute inset-0 rounded-lg border-animation"></div> */}
                     <div className="relative z-10 bg-white rounded-lg">
                         <h2 className='text-2xl font-bold underline uppercase'>
                             Total Expense

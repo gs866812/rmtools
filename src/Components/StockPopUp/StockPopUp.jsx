@@ -56,7 +56,7 @@ const StockPopUp = () => {
     <div>
       <div
         onClick={() => document.getElementById("stock_modal").showModal()}
-        className="p-1 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
+        className="p-2 w-full hover:text-white flex items-center gap-2 hover:bg-[#151515] mb-[1px] rounded-md"
       >
         <span className="flex items-center gap-2">
           {" "}
