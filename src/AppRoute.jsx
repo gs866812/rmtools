@@ -27,6 +27,7 @@ import TradeReturn from "./Components/Return/TradeReturn";
 import Summary from "./Pages/Summary";
 import ExpenseList from "./Components/ExpenseList/ExpenseList";
 import Debt from "./Pages/Debt";
+import DebtProtected from "./Components/DebtProtected/DebtProtected";
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -62,7 +63,7 @@ export const router = createBrowserRouter([
       { path: "/return", element: <TradeReturn /> },
       { path: "/summary", element: <Summary /> },
       { path: "/expenseList", element: <ExpenseList /> },
-      { path: "/debt", element: <Debt /> },
+      { path: "/debt", element: <DebtProtected><Debt /></DebtProtected> },
     ],
   },
 ]);
