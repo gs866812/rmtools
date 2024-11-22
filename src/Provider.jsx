@@ -47,7 +47,7 @@ const Provider = ({ children }) => {
     const token = localStorage.getItem("jwtToken");
     if (token) {
       try {
-        const response = await axios.post("http://localhost:9000/validate-token", null, {
+        const response = await axios.post("https://api.rm.toolscare.net/validate-token", null, {
           headers: { Authorization: `Bearer ${token}` }
       });  
         if (response.data.success) {
@@ -252,23 +252,17 @@ const Provider = ({ children }) => {
     if (user?.email) {
       const normalizedEmail = user.email.toLowerCase(); // Normalize the email
       switch (normalizedEmail) {
-        case "asad4design@gmail.com":
-          setUserName("ASAD1010");
-          break;
-        case "mozumdarhattraders@gmail.com":
-          setUserName("ARIF2020");
+        case "alaminlock@gmail.com":
+          setUserName("ALAMIN01");
           break;
         case "gooogle.sarwar@gmail.com": 
           setUserName("DEVELOPER");
           break;
-        case "shop@mail.com": 
-          setUserName("DEMO_USER");
-          break;
         default:
-          setUserName(null);
+          setUserName("DEFAULT");
       }
     } else {
-      setUserName(null); // Reset userName if there's no user or email
+      setUserName("DEFAULT"); // Reset userName if there's no user or email
     }
   }, [user]);
 

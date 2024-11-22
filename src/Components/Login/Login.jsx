@@ -38,7 +38,7 @@ const Login = () => {
       const emailData = { email: user.email };
 
       // Request to get JWT token
-      const res = await axios.post('http://localhost:9000/jwt', emailData);
+      const res = await axios.post('https://api.rm.toolscare.net/jwt', emailData);
       if (res.data.token) {
         localStorage.setItem('jwtToken', res.data.token); // Store token in localStorage
         setUser(user); // Set the user context
@@ -63,8 +63,9 @@ const Login = () => {
     <div className="">
       <div className="fanwood flex justify-center items-center lg:py-8 px-4 bg-gray-800 h-[100vh]">
         <div className="flex flex-col bg-gray-700 lg:p-14 md:p-10 p-5 lg:w-1/2 md:w-2/3 gap-3 mx-auto max-w-screen-2xl lg:bg-opacity-90 shadow-md border rounded-md">
-          <div>
-            <img src={logo} alt="" />
+          <div className="text-center text-4xl text-white font-bold">
+            {/* <img src={logo} alt="" /> */}
+            <h2>TOOLS CARE</h2>
           </div>
 
 

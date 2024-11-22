@@ -126,8 +126,8 @@ const Sidebar = () => {
 
   return (
     <div>
-      <div className="sticky top-0 bg-[#2A3042] z-50">
-        <img src={logo} alt="MHT" className="py-3" />
+      <div className="sticky top-0 bg-[#2A3042] z-50 border text-center rounded-md mt-1">
+        <h2 className="text-3xl text-white py-2">TOOLS CARE</h2>
       </div>
 
       <nav className="text-[#C1C1C1] mt-5 w-full">
@@ -350,7 +350,8 @@ const Sidebar = () => {
 
 
         {
-          userName == "DEVELOPER" ? 
+
+          (userName === "DEVELOPER" || userName === "ALAMIN01") ?
           <div className=" animate__animated animate__backInDown mt-1">
           <NavLink
             to="/debt"
@@ -380,7 +381,7 @@ const Sidebar = () => {
               className="rounded-l-md"
               title={userName}
               alt={userName}
-              src={userName == 'ARIF2020' ? 'https://iili.io/2zUIE3G.jpg' : userName == 'DEVELOPER' ? 'https://iili.io/2BqJhuf.png' : userName == 'ASAD1010' ? 'https://iili.io/2zUIGaf.jpg' : userName == 'DEMO_USER' ? 'https://iili.io/2IoW4B1.png' : null} />
+              src={userName == 'ALAMIN01' ? 'https://iili.io/27e1nv2.png' : userName == 'DEVELOPER' ? 'https://iili.io/2BqJhuf.png' : userName == 'ASAD1010' ? 'https://iili.io/2zUIGaf.jpg' : userName == 'DEMO_USER' ? 'https://iili.io/2IoW4B1.png' : null} />
           </div>
           <button onClick={() => logOut()} className="bg-red-500 w-full rounded-r-md text-start pl-3 hover:bg-red-700 ">Log Out</button>
         </div>

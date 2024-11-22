@@ -15,7 +15,7 @@ const DebtProtected = ({ children }) => {
     );
   }
 
-  if (user && (userName === "DEVELOPER" || userName === "ASAD2020")) {
+  if (user && (userName === "DEVELOPER" || userName === "ALAMIN01")) {
     // If user is logged in, render children components
     return children;
   }
